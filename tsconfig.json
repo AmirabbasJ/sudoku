@@ -1,0 +1,4 @@
+{
+  "extends": "@fullstacksjs/tsconfig/react",
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
