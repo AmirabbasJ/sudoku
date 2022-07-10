@@ -1,6 +1,9 @@
+/* eslint-disable react/no-array-index-key */
 import styled from 'styled-components';
 
-const SBoard = styled.div`
+import { getBoard } from './getBoard';
+
+const Container = styled.div`
   background-color: black;
   display: grid;
   grid-gap: 2px;
@@ -33,105 +36,15 @@ const Slot = styled.div`
 `;
 
 export const Board: React.FC = () => (
-  <SBoard>
-    <Block>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-    </Block>
-    <Block>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-    </Block>
-    <Block>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-    </Block>
-    <Block>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-    </Block>
-    <Block>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-    </Block>
-    <Block>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-    </Block>
-    <Block>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-    </Block>
-    <Block>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-    </Block>
-    <Block>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-      <Slot>1</Slot>
-    </Block>
-  </SBoard>
+  <Container>
+    {getBoard()
+      .flat()
+      .map((rowBlock, bi) => (
+        <Block key={bi}>
+          {rowBlock.map((block, bli) =>
+            block.map((slot, si) => <Slot key={bi + bli + si}>{slot}</Slot>),
+          )}
+        </Block>
+      ))}
+  </Container>
 );
