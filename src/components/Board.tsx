@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import styled from 'styled-components';
 
-import { getBoard } from './getBoard';
+import { getBoard } from '../getBoard';
 
 const Container = styled.div`
   background-color: black;

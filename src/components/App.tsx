@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
+import { GlobalStyle } from '../GlobalStyles';
 import { Board } from './Board';
-import { GlobalStyle } from './GlobalStyles';
 
 const Container = styled.div`
   padding: 0;
