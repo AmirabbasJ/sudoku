@@ -3,7 +3,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 
 import type { Id } from '../domain/Board';
-import { toId, updateBoard } from '../domain/Board';
+import { editSlot, toId } from '../domain/Board';
 import { getBoard } from '../getBoard';
 
 const Container = styled.div`
@@ -38,25 +38,45 @@ const Slot = styled.div<{ isSelected: boolean }>`
   align-items: center;
   font-size: 1.3em;
   cursor: pointer;
+  user-select: none;
+  outline: none;
 `;
+
 const initBoard = getBoard();
 export const Board: React.FC = () => {
   const [board, setBoard] = useState(initBoard);
   const [selectedId, setSelectedId] = useState<Id | null>(null);
+
+  const onSlotChange = (key: string) =>
+    setBoard(editSlot(board, selectedId as Id, key));
+  const toggleFocus = (target: HTMLDivElement, isSelected: boolean, id: Id) => {
+    if (isSelected) {
+      setSelectedId(null);
+      target.blur();
+      return;
+    }
+    setSelectedId(id);
+    target.focus();
+  };
+
   return (
     <Container>
       {board.map((rowBlock, bi) =>
         rowBlock.map((b, rbi) => (
-          <Block key={bi}>
+          <Block key={rbi + bi}>
             {b.map((block, bli) =>
               block.map((slot, si) => {
                 const id = toId(bi, rbi, bli, si);
+                const isSelected = id === selectedId;
                 return (
                   <Slot
-                    isSelected={id === selectedId}
+                    isSelected={isSelected}
                     key={id}
-                    // onClick={() => setBoard(updateBoard(board, id, 'empty'))}
-                    onClick={() => setSelectedId(id)}
+                    tabIndex={0}
+                    onKeyDown={({ key }) => onSlotChange(key)}
+                    onClick={({ currentTarget }) =>
+                      toggleFocus(currentTarget, isSelected, id)
+                    }
                   >
                     {slot}
                   </Slot>
