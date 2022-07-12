@@ -31,12 +31,12 @@ const Block = styled.div`
 
 const Slot = styled.div<{ isSelected: boolean }>`
   width: 4rem;
-  background-color: ${({ isSelected }) => (isSelected ? '#d1d1d1' : '#ebebeb')};
+  background-color: ${({ isSelected }) => (isSelected ? '#ebebeb' : 'white')};
   height: 4rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.3em;
+  font-size: 2em;
   cursor: pointer;
   user-select: none;
   outline: none;
@@ -47,8 +47,7 @@ export const Board: React.FC = () => {
   const [board, setBoard] = useState(initBoard);
   const [selectedId, setSelectedId] = useState<Id | null>(null);
 
-  const onSlotChange = (key: string) =>
-    setBoard(editSlot(board, selectedId as Id, key));
+  const onSlotChange = (key: string) => setBoard(editSlot(board, selectedId as Id, key));
   const toggleFocus = (target: HTMLDivElement, isSelected: boolean, id: Id) => {
     if (isSelected) {
       setSelectedId(null);
@@ -74,9 +73,7 @@ export const Board: React.FC = () => {
                     key={id}
                     tabIndex={0}
                     onKeyDown={({ key }) => onSlotChange(key)}
-                    onClick={({ currentTarget }) =>
-                      toggleFocus(currentTarget, isSelected, id)
-                    }
+                    onClick={({ currentTarget }) => toggleFocus(currentTarget, isSelected, id)}
                   >
                     {slot}
                   </Slot>
