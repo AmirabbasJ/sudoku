@@ -47,12 +47,12 @@ const initBoard = getBoard();
 export const Board: React.FC = () => {
   const [board, setBoard] = useState(initBoard);
   const [selectedId, setSelectedId] = useState<Id | null>(null);
-  const [failureIds, setFailureIds] = useState<Id[]>([]);
+  const [mistakeIds, setMistakeIds] = useState<Id[]>([]);
 
   const onSlotChange = (key: string, id: Id, slot: ISlot) => {
     if (slot !== '') return;
     const [newBoard, msg] = editSlot(board, id, key);
-    if (msg === 'failure') setFailureIds(ids => [...ids, id]);
+    if (msg === 'failure') setMistakeIds(ids => [...ids, id]);
 
     return setBoard(newBoard);
   };
@@ -75,7 +75,7 @@ export const Board: React.FC = () => {
               block.map((slot, si) => {
                 const id = toId(bi, rbi, bli, si);
                 const isSelected = id === selectedId;
-                const isFailure = failureIds.includes(id);
+                const isFailure = mistakeIds.includes(id);
                 return (
                   <Slot
                     isSelected={isSelected}
