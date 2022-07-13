@@ -6,13 +6,13 @@ import { Board } from './components/Board';
 import { GlobalStyle } from './GlobalStyles';
 
 const Container = styled.div`
-  padding: 0;
+  padding: 2rem 4rem;
   margin: 0;
   box-sizing: border-box;
   width: 100%;
   height: 100vh;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 `;
 
