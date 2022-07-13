@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 
-import type { Id } from '../domain/Board';
+import type { Id, Slot as ISlot } from '../domain/Board';
 import { editSlot, toId } from '../domain/Board';
 import { getBoard } from '../getBoard';
 
@@ -29,10 +29,11 @@ const Block = styled.div`
   grid-template-rows: 1fr 1fr 1fr;
 `;
 
-const Slot = styled.div<{ isSelected: boolean }>`
+const Slot = styled.div<{ isSelected: boolean; isFailure: boolean }>`
   width: 4rem;
-  background-color: ${({ isSelected }) => (isSelected ? '#ebebeb' : 'white')};
   height: 4rem;
+  background-color: ${({ isSelected }) => (isSelected ? '#ebebeb' : 'white')};
+  color: ${({ isFailure }) => (isFailure ? 'tomato' : 'initial')};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,8 +47,15 @@ const initBoard = getBoard();
 export const Board: React.FC = () => {
   const [board, setBoard] = useState(initBoard);
   const [selectedId, setSelectedId] = useState<Id | null>(null);
+  const [failureIds, setFailureIds] = useState<Id[]>([]);
 
-  const onSlotChange = (key: string) => setBoard(editSlot(board, selectedId as Id, key));
+  const onSlotChange = (key: string, id: Id, slot: ISlot) => {
+    if (slot !== '') return;
+    const [newBoard, msg] = editSlot(board, id, key);
+    if (msg === 'failure') setFailureIds(ids => [...ids, id]);
+
+    return setBoard(newBoard);
+  };
   const toggleFocus = (target: HTMLDivElement, isSelected: boolean, id: Id) => {
     if (isSelected) {
       setSelectedId(null);
@@ -67,12 +75,14 @@ export const Board: React.FC = () => {
               block.map((slot, si) => {
                 const id = toId(bi, rbi, bli, si);
                 const isSelected = id === selectedId;
+                const isFailure = failureIds.includes(id);
                 return (
                   <Slot
                     isSelected={isSelected}
+                    isFailure={isFailure}
                     key={id}
                     tabIndex={0}
-                    onKeyDown={({ key }) => onSlotChange(key)}
+                    onKeyDown={({ key }) => onSlotChange(key, id, slot)}
                     onClick={({ currentTarget }) => toggleFocus(currentTarget, isSelected, id)}
                   >
                     {slot}

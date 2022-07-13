@@ -31,13 +31,13 @@ const checkIsInBlock = (board: Board, id: Id, slot: NumericSlot): boolean => {
 
 const checkIsValidSlot = (board: Board, id: Id, key: NumericSlot): boolean => !checkIsInBlock(board, id, key);
 
-export const editSlot = (board: Board, id: Id, key: string): Board | 'failure' => {
+export const editSlot = (board: Board, id: Id, key: string): [Board, 'failure' | 'success'] => {
   const slot = parseSlot(key);
-  if (slot == null) return board;
-  if (slot === '') return setSlot(board, id, slot);
+  if (slot == null) return [board, 'success'];
+  if (slot === '') return [setSlot(board, id, slot), 'success'];
 
   const isValidSlot = checkIsValidSlot(board, id, slot);
-  if (!isValidSlot) return 'failure';
+  if (!isValidSlot) return [setSlot(board, id, slot), 'failure'];
 
-  return setSlot(board, id, slot);
+  return [setSlot(board, id, slot), 'success'];
 };
