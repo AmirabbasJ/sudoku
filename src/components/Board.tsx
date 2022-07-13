@@ -61,7 +61,7 @@ export const Board: React.FC = () => {
     if (isMistakeSlot) setMistakeIds(mistakeIds.filter(i => i !== id));
 
     const [newBoard, state] = editSlot(board, id, slot);
-    if (state === 'failure') setMistakeIds(ids => ids.concat(id));
+    if (state === 'mistake') setMistakeIds(ids => ids.concat(id));
 
     return setBoard(newBoard);
   };

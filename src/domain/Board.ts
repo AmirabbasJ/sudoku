@@ -3,6 +3,7 @@ import * as R from 'ramda';
 type NumericSlot = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 type EmptySlot = '';
 export type Slot = EmptySlot | NumericSlot;
+export type SlotState = 'correct' | 'mistake';
 
 export type Block = [[Slot, Slot, Slot], [Slot, Slot, Slot], [Slot, Slot, Slot]];
 export type Board = [[Block, Block, Block], [Block, Block, Block], [Block, Block, Block]];
@@ -28,14 +29,15 @@ const checkIsInBlock = (board: Board, id: Id, slot: NumericSlot): boolean => {
   const blockNumbers = block.flat();
   return blockNumbers.includes(slot);
 };
+
 // const getRow = () => {};
 // const getCol = () => {};
 
 const checkIsValidSlot = (board: Board, id: Id, key: Slot): boolean => key === '' || !checkIsInBlock(board, id, key);
 
-export const editSlot = (board: Board, id: Id, slot: Slot): [Board, 'failure' | 'success'] => {
+export const editSlot = (board: Board, id: Id, slot: Slot): [Board, SlotState] => {
   const isValidSlot = checkIsValidSlot(board, id, slot);
   const newBoard = setSlot(board, id, slot);
-  const state = !isValidSlot ? 'failure' : 'success';
+  const state: SlotState = !isValidSlot ? 'mistake' : 'correct';
   return [newBoard, state];
 };
