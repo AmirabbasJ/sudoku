@@ -51,13 +51,15 @@ export const Board: React.FC = () => {
 
   const onSlotChange = (key: string, id: Id, currSlot: ISlot) => {
     const slot = parseSlot(key);
-    if (slot == null) return;
-    if (slot === currSlot) return;
     const isEmptySlot = currSlot === '';
     const isMistakeSlot = mistakeIds.includes(id);
     const isMutableSlot = !isEmptySlot && !isMistakeSlot;
+
+    if (slot == null) return;
+    if (slot === currSlot) return;
     if (isMutableSlot) return;
     if (isMistakeSlot) setMistakeIds(mistakeIds.filter(i => i !== id));
+
     const [newBoard, state] = editSlot(board, id, slot);
     if (state === 'failure') setMistakeIds(ids => ids.concat(id));
 
