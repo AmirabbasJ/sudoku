@@ -68,12 +68,12 @@ export const Board: React.FC = () => {
 
   return (
     <Container>
-      {board.map((rowBlock, bi) =>
-        rowBlock.map((b, rbi) => (
-          <Block key={rbi + bi}>
-            {b.map((block, bli) =>
-              block.map((slot, si) => {
-                const id = toId(bi, rbi, bli, si);
+      {board.map((blockRow, blockRowIndex) =>
+        blockRow.map((blocks, blockColIndex) => (
+          <Block key={blockColIndex + blockRowIndex}>
+            {blocks.map((slots, slotRowIndex) =>
+              slots.map((slot, slotColIndex) => {
+                const id = toId(blockRowIndex, blockColIndex, slotRowIndex, slotColIndex);
                 const isSelected = id === selectedId;
                 const isFailure = mistakeIds.includes(id);
                 return (
