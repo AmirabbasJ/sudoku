@@ -37,7 +37,7 @@ const Slot = styled.div<{ isSelected: boolean; isMistake: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2em;
+  font-size: 2.2em;
   cursor: pointer;
   user-select: none;
   outline: none;
