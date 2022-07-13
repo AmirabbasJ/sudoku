@@ -16,9 +16,13 @@ export const fromIdToBoardIndex = (id: Id): BoardIndex => id.split('-').map(x =>
 export const parseSlot = (x: string): Slot | null =>
   /^(Backspace)|(Delete)$/.test(x) ? '' : /^([1-9]{1})$/.test(x) ? (Number.parseInt(x, 10) as NumericSlot) : null;
 
+const setSlot = (initBoard: Board, id: Id, slot: Slot) => {
+  const boardIndex = fromIdToBoardIndex(id);
+  return R.assocPath(boardIndex, slot, initBoard);
+}
+
 export const editSlot = (initBoard: Board, id: Id, key: string) => {
   const slot = parseSlot(key);
   if (slot == null) return initBoard;
-  const boardIndex = fromIdToBoardIndex(id);
-  return R.assocPath(boardIndex, slot, initBoard);
+  return setSlot(initBoard, id, slot)
 };
