@@ -29,11 +29,11 @@ const Block = styled.div`
   grid-template-rows: 1fr 1fr 1fr;
 `;
 
-const Slot = styled.div<{ isSelected: boolean; isFailure: boolean }>`
+const Slot = styled.div<{ isSelected: boolean; isMistake: boolean }>`
   width: 4rem;
   height: 4rem;
-  background-color: ${({ isSelected }) => (isSelected ? '#ebebeb' : 'white')};
-  color: ${({ isFailure }) => (isFailure ? 'tomato' : 'initial')};
+  background-color: ${({ isSelected, isMistake }) => (isSelected ? '#b2d8ff' : isMistake ? '#ffdbdb' : 'white')};
+  color: ${({ isMistake }) => (isMistake ? 'tomato' : 'initial')};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -75,11 +75,11 @@ export const Board: React.FC = () => {
               slots.map((slot, slotColIndex) => {
                 const id = toId(blockRowIndex, blockColIndex, slotRowIndex, slotColIndex);
                 const isSelected = id === selectedId;
-                const isFailure = mistakeIds.includes(id);
+                const isMistake = mistakeIds.includes(id);
                 return (
                   <Slot
                     isSelected={isSelected}
-                    isFailure={isFailure}
+                    isMistake={isMistake}
                     key={id}
                     tabIndex={0}
                     onKeyDown={({ key }) => onSlotChange(key, id, slot)}
