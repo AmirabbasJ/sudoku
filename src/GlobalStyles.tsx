@@ -1,4 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
+
 import Roboto from './assets/Roboto-Light.ttf';
 
 export const GlobalStyle = createGlobalStyle`

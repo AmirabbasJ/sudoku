@@ -56,7 +56,6 @@ const sampleBoard: Board = [
 
 export const getBoard: () => Board = () => sampleBoard;
 
-
 const solvedSampleBoard: Board = [
   [
     [
