@@ -9,6 +9,7 @@ export type Board = [[Block, Block, Block], [Block, Block, Block], [Block, Block
 
 export type Id = `${number}-${number}-${number}-${number}`;
 export type BoardIndex = [number, number, number, number];
+
 export const toId = (blockRowIndex: number, blockColIndex: number, slotRowIndex: number, slotColIndex: number): Id =>
   `${blockRowIndex}-${blockColIndex}-${slotRowIndex}-${slotColIndex}`;
 
@@ -30,15 +31,11 @@ const checkIsInBlock = (board: Board, id: Id, slot: NumericSlot): boolean => {
 // const getRow = () => {};
 // const getCol = () => {};
 
-const checkIsValidSlot = (board: Board, id: Id, key: NumericSlot): boolean => !checkIsInBlock(board, id, key);
+const checkIsValidSlot = (board: Board, id: Id, key: Slot): boolean => key === '' || !checkIsInBlock(board, id, key);
 
-export const editSlot = (board: Board, id: Id, key: string): [Board, 'failure' | 'success'] => {
-  const slot = parseSlot(key);
-  if (slot == null) return [board, 'success'];
-  if (slot === '') return [setSlot(board, id, slot), 'success'];
-
+export const editSlot = (board: Board, id: Id, slot: Slot): [Board, 'failure' | 'success'] => {
   const isValidSlot = checkIsValidSlot(board, id, slot);
-  if (!isValidSlot) return [setSlot(board, id, slot), 'failure'];
-
-  return [setSlot(board, id, slot), 'success'];
+  const newBoard = setSlot(board, id, slot);
+  const state = !isValidSlot ? 'failure' : 'success';
+  return [newBoard, state];
 };

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 
 import type { Id, Slot as ISlot } from '../domain/Board';
-import { editSlot, toId } from '../domain/Board';
+import { editSlot, parseSlot, toId } from '../domain/Board';
 import { getBoard } from '../getBoard';
 
 const Container = styled.div`
@@ -49,10 +49,17 @@ export const Board: React.FC = () => {
   const [selectedId, setSelectedId] = useState<Id | null>(null);
   const [mistakeIds, setMistakeIds] = useState<Id[]>([]);
 
-  const onSlotChange = (key: string, id: Id, slot: ISlot) => {
-    if (slot !== '') return;
-    const [newBoard, msg] = editSlot(board, id, key);
-    if (msg === 'failure') setMistakeIds(ids => [...ids, id]);
+  const onSlotChange = (key: string, id: Id, currSlot: ISlot) => {
+    const slot = parseSlot(key);
+    if (slot == null) return;
+    if (slot === currSlot) return;
+    const isEmptySlot = currSlot === '';
+    const isMistakeSlot = mistakeIds.includes(id);
+    const isMutableSlot = !isEmptySlot && !isMistakeSlot;
+    if (isMutableSlot) return;
+    if (isMistakeSlot) setMistakeIds(mistakeIds.filter(i => i !== id));
+    const [newBoard, state] = editSlot(board, id, slot);
+    if (state === 'failure') setMistakeIds(ids => ids.concat(id));
 
     return setBoard(newBoard);
   };
