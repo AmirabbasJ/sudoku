@@ -30,10 +30,18 @@ const checkIsInBlock = (board: Board, id: Id, slot: NumericSlot): boolean => {
   return blockNumbers.includes(slot);
 };
 
-// const getRow = () => {};
+const checkIsInRow = (board: Board, id: Id, slot: NumericSlot): boolean => {
+  const [blockRow, _, slotRow] = idToBoardIndex(id);
+  const row = R.pluck(slotRow, board[blockRow]!).flat();
+  return row.includes(slot);
+};
 // const getCol = () => {};
 
-const checkIsValidSlot = (board: Board, id: Id, key: Slot): boolean => key === '' || !checkIsInBlock(board, id, key);
+const checkIsValidSlot = (board: Board, id: Id, key: Slot): boolean => {
+  if (key === '') return true;
+  console.log(checkIsInRow(board, id, key));
+  return !checkIsInRow(board, id, key) && !checkIsInBlock(board, id, key);
+};
 
 export const editSlot = (board: Board, id: Id, slot: Slot): [Board, SlotState] => {
   const isValidSlot = checkIsValidSlot(board, id, slot);
