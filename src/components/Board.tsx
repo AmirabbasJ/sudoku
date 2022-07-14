@@ -2,8 +2,11 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 
-import type { Id, Slot as ISlot } from '../domain/Board';
-import { editSlot, parseSlot, toId } from '../domain/Board';
+import { editSlot } from '../domain/Board';
+import type { Id } from '../domain/Id';
+import { toId } from '../domain/Id';
+import type { Slot as ISlot } from '../domain/Slot';
+import { parseSlot } from '../domain/Slot';
 import { getBoard } from '../getBoard';
 
 const Container = styled.div`
