@@ -51,12 +51,14 @@ export const Board: React.FC = () => {
 
   const onSlotChange = (key: string, id: Id, currSlot: ISlot) => {
     const slot = parseSlot(key);
+    const failedToParse = slot == null;
+    const slotIsTheSameAsBefore = slot === currSlot;
     const isEmptySlot = currSlot === '';
     const isMistakeSlot = mistakeIds.includes(id);
     const isMutableSlot = !isEmptySlot && !isMistakeSlot;
 
-    if (slot == null) return;
-    if (slot === currSlot) return;
+    if (failedToParse) return;
+    if (slotIsTheSameAsBefore) return;
     if (isMutableSlot) return;
     if (isMistakeSlot) setMistakeIds(mistakeIds.filter(i => i !== id));
 
