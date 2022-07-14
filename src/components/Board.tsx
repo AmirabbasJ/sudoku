@@ -70,6 +70,7 @@ export const Board: React.FC = () => {
 
     return setBoard(newBoard);
   };
+
   const toggleFocus = (target: HTMLDivElement, isSelected: boolean, id: Id) => {
     if (isSelected) {
       setSelectedId(null);
@@ -87,7 +88,7 @@ export const Board: React.FC = () => {
           <Block key={blockColIndex + blockRowIndex}>
             {blocks.map((slots, slotRowIndex) =>
               slots.map((slot, slotColIndex) => {
-                const id = toId(blockRowIndex, blockColIndex, slotRowIndex, slotColIndex);
+                const id = toId([blockRowIndex, blockColIndex, slotRowIndex, slotColIndex]);
                 const isSelected = id === selectedId;
                 const isMistake = mistakeIds.includes(id);
                 return (
