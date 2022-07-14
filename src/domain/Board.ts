@@ -35,9 +35,13 @@ const isNotInRow = (board: Board, id: Id, slot: NumericSlot): boolean => {
   const rowSlots = R.pluck(slotRow, board[blockRow]!).flat();
   return !rowSlots.includes(slot);
 };
-// const getCol = () => {};
+const isNotInCol = (board: Board, id: Id, slot: NumericSlot): boolean => {
+  const [_, blockCol, __, slotCol] = idToBoardIndex(id);
+  const colSlots = R.pluck(slotCol, R.pluck(blockCol, board).flat());
+  return !colSlots.includes(slot);
+};
 
-const isValidNumericSlot = R.allPass([isNotInRow, isNotInBlock]);
+const isValidNumericSlot = R.allPass([isNotInRow, isNotInBlock, isNotInCol]);
 
 export const editSlot = (board: Board, id: Id, slot: Slot): [Board, SlotState] => {
   const isValidSlot = slot === '' || isValidNumericSlot(board, id, slot);
