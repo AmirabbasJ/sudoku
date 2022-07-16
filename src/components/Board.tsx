@@ -60,9 +60,7 @@ export const Board: React.FC = () => {
       setSelectedId(id => (id === null ? null : moveInBoard(id, dir)));
     };
     document.addEventListener('keydown', changeSelectedSlot);
-    return () => {
-      document.removeEventListener('keydown', changeSelectedSlot);
-    };
+    return () => document.removeEventListener('keydown', changeSelectedSlot);
   }, []);
 
   const onSlotChange = (key: string, id: Id, currSlot: ISlot) => {
