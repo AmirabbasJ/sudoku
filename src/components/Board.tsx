@@ -2,11 +2,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { editSlot, getSlot } from '../domain/Board';
 import { keyToDir, moveInBoard } from '../domain/Direction';
 import type { Id } from '../domain/Id';
 import { toId } from '../domain/Id';
-import { parseSlot } from '../domain/Slot';
+import { editSlot, getSlot, isValidSlot, parseSlot } from '../domain/Slot';
 import { getBoard } from '../getBoard';
 
 const Container = styled.div`
@@ -52,6 +51,10 @@ export const Board: React.FC = () => {
   const [mistakeIds, setMistakeIds] = useState<Id[]>([]);
   const [selectedId, setSelectedId] = useState<Id | null>(null);
 
+  const recheckMistakeValidity = useCallback(() => {
+    setMistakeIds(mids => mids.filter(id => !isValidSlot(board, id, getSlot(board, id))));
+  }, [board]);
+
   const editViewSlot = useCallback(
     (key: string) => {
       if (selectedId == null) return;
@@ -85,6 +88,8 @@ export const Board: React.FC = () => {
     },
     [selectedId],
   );
+
+  useEffect(() => recheckMistakeValidity(), [board, recheckMistakeValidity]);
 
   useEffect(() => {
     const handleEditViewSlot = ({ key }: KeyboardEvent) => editViewSlot(key);
