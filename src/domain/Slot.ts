@@ -1,6 +1,7 @@
 import * as R from 'ramda';
 
 import type { Board } from './Board';
+import { setBoard } from './Board';
 import type { Id } from './Id';
 import { idToBoardIndex } from './Id';
 
@@ -30,4 +31,16 @@ const isNotInCol = (board: Board, id: Id, slot: NumericSlot): boolean => {
   return !colSlots.includes(slot);
 };
 
-export const isValidNumericSlot = R.allPass([isNotInRow, isNotInBlock, isNotInCol]);
+const isValidNumericSlot = R.allPass([isNotInRow, isNotInBlock, isNotInCol]);
+
+export const isValidSlot = (board: Board, id: Id, slot: Slot) =>
+  slot === '' || isValidNumericSlot(setBoard(board, id, ''), id, slot);
+
+export const getSlot = (board: Board, id: Id): Slot => R.path(idToBoardIndex(id), board) as Slot;
+
+export const editSlot = (board: Board, id: Id, slot: Slot): [Board, SlotState] => {
+  const validSlot = isValidSlot(board, id, slot);
+  const newBoard = setBoard(board, id, slot);
+  const state: SlotState = !validSlot ? 'mistake' : 'correct';
+  return [newBoard, state];
+};
