@@ -16,6 +16,17 @@ export const moveUp = (id: Id): Id => {
   return toId([nextBlockRow, _, nextSlotRow, __]);
 };
 
+export const moveDown = (id: Id): Id => {
+  const [blockRow, _, slotRow, __] = idToBoardIndex(id);
+
+  const shouldGoNextBlock = slotRow + 1 >= 3;
+  const shouldGoLastBlock = shouldGoNextBlock && blockRow + 1 >= 3;
+
+  const nextSlotRow = shouldGoNextBlock ? 0 : slotRow + 1;
+  const nextBlockRow = shouldGoLastBlock ? 0 : shouldGoNextBlock ? blockRow + 1 : blockRow;
+  return toId([nextBlockRow, _, nextSlotRow, __]);
+};
+
 export const keyToDir = (key: string): Direction | null =>
   key === 'ArrowUp'
     ? 'Up'
@@ -29,5 +40,6 @@ export const keyToDir = (key: string): Direction | null =>
 
 export const moveInBoard = (id: Id, dir: Direction): Id => {
   if (dir === 'Up') return moveUp(id);
+  if (dir === 'Down') return moveDown(id);
   return id;
 };
