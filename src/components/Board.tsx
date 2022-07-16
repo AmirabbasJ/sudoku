@@ -1,8 +1,8 @@
 /* eslint-disable react/no-array-index-key */
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { editSlot } from '../domain/Board';
+import { editSlot, getSlot } from '../domain/Board';
 import { keyToDir, moveInBoard } from '../domain/Direction';
 import type { Id } from '../domain/Id';
 import { toId } from '../domain/Id';
@@ -53,34 +53,50 @@ export const Board: React.FC = () => {
   const [mistakeIds, setMistakeIds] = useState<Id[]>([]);
   const [selectedId, setSelectedId] = useState<Id | null>(null);
 
-  useEffect(() => {
-    const moveSelectedSlot = ({ key }: KeyboardEvent) => {
-      const dir = keyToDir(key);
-      if (dir == null) return;
-      setSelectedId(id => (id === null ? null : moveInBoard(id, dir)));
-    };
-    document.addEventListener('keydown', moveSelectedSlot);
-    return () => document.removeEventListener('keydown', moveSelectedSlot);
-  }, []);
+  const onSlotChange = useCallback(
+    (key: string) => {
+      if (selectedId == null) return;
 
-  const onSlotChange = (key: string, id: Id, currSlot: ISlot) => {
-    const slot = parseSlot(key);
-    const failedToParse = slot == null;
-    const slotIsTheSameAsBefore = slot === currSlot;
-    const isEmptySlot = currSlot === '';
-    const isMistakeSlot = mistakeIds.includes(id);
-    const isMutableSlot = !isEmptySlot && !isMistakeSlot;
+      const currSlot = getSlot(board, selectedId);
+      const slot = parseSlot(key);
+      const failedToParse = slot == null;
+      const slotIsTheSameAsBefore = slot === currSlot;
+      const isEmptySlot = currSlot === '';
+      const isMistakeSlot = mistakeIds.includes(selectedId);
+      const isMutableSlot = !isEmptySlot && !isMistakeSlot;
 
-    if (failedToParse) return;
-    if (slotIsTheSameAsBefore) return;
-    if (isMutableSlot) return;
-    if (isMistakeSlot) setMistakeIds(mistakeIds.filter(i => i !== id));
+      if (failedToParse) return;
+      if (slotIsTheSameAsBefore) return;
+      if (isMutableSlot) return;
+      if (isMistakeSlot) setMistakeIds(mistakeIds.filter(i => i !== selectedId));
 
-    const [newBoard, state] = editSlot(board, id, slot);
-    if (state === 'mistake') setMistakeIds(ids => ids.concat(id));
+      const [newBoard, state] = editSlot(board, selectedId, slot);
+      if (state === 'mistake') setMistakeIds(ids => ids.concat(selectedId));
 
-    return setBoard(newBoard);
+      return setBoard(newBoard);
+    },
+    [board, mistakeIds, selectedId],
+  );
+
+  const moveSelectedSlot = (key: string) => {
+    const dir = keyToDir(key);
+    if (dir == null) return;
+    setSelectedId(id => (id === null ? null : moveInBoard(id, dir)));
   };
+
+  useEffect(() => {
+    const handleOnSlotChange = ({ key }: KeyboardEvent) => onSlotChange(key);
+    const handleMoveSelectedSlot = ({ key }: KeyboardEvent) => moveSelectedSlot(key);
+
+    document.addEventListener('keydown', handleOnSlotChange);
+    document.addEventListener('keydown', handleMoveSelectedSlot);
+
+    return () => {
+      document.removeEventListener('keydown', handleOnSlotChange);
+      document.removeEventListener('keydown', handleMoveSelectedSlot);
+    };
+  }, [onSlotChange]);
+
   const selectSlot = (isSelected: boolean, id: Id) => setSelectedId(isSelected ? null : id);
 
   return (
@@ -98,8 +114,6 @@ export const Board: React.FC = () => {
                     isSelected={isSelected}
                     isMistake={isMistake}
                     key={id}
-                    tabIndex={0}
-                    onKeyDown={({ key }) => onSlotChange(key, id, slot)}
                     onClick={() => selectSlot(isSelected, id)}
                   >
                     {slot}
