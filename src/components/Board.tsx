@@ -1,9 +1,12 @@
 /* eslint-disable react/no-array-index-key */
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import type { Id, Slot as ISlot } from '../domain/Board';
-import { editSlot, parseSlot, toId } from '../domain/Board';
+import { editSlot, getSlot } from '../domain/Board';
+import { keyToDir, moveInBoard } from '../domain/Direction';
+import type { Id } from '../domain/Id';
+import { toId } from '../domain/Id';
+import { parseSlot } from '../domain/Slot';
 import { getBoard } from '../getBoard';
 
 const Container = styled.div`
@@ -46,36 +49,57 @@ const Slot = styled.div<{ isSelected: boolean; isMistake: boolean }>`
 const initBoard = getBoard();
 export const Board: React.FC = () => {
   const [board, setBoard] = useState(initBoard);
-  const [selectedId, setSelectedId] = useState<Id | null>(null);
   const [mistakeIds, setMistakeIds] = useState<Id[]>([]);
+  const [selectedId, setSelectedId] = useState<Id | null>(null);
 
-  const onSlotChange = (key: string, id: Id, currSlot: ISlot) => {
-    const slot = parseSlot(key);
-    const failedToParse = slot == null;
-    const slotIsTheSameAsBefore = slot === currSlot;
-    const isEmptySlot = currSlot === '';
-    const isMistakeSlot = mistakeIds.includes(id);
-    const isMutableSlot = !isEmptySlot && !isMistakeSlot;
+  const editViewSlot = useCallback(
+    (key: string) => {
+      if (selectedId == null) return;
 
-    if (failedToParse) return;
-    if (slotIsTheSameAsBefore) return;
-    if (isMutableSlot) return;
-    if (isMistakeSlot) setMistakeIds(mistakeIds.filter(i => i !== id));
+      const currSlot = getSlot(board, selectedId);
+      const slot = parseSlot(key);
+      const failedToParse = slot == null;
+      const slotIsTheSameAsBefore = slot === currSlot;
+      const isEmptySlot = currSlot === '';
+      const isMistakeSlot = mistakeIds.includes(selectedId);
+      const isMutableSlot = !isEmptySlot && !isMistakeSlot;
 
-    const [newBoard, state] = editSlot(board, id, slot);
-    if (state === 'mistake') setMistakeIds(ids => ids.concat(id));
+      if (failedToParse) return;
+      if (slotIsTheSameAsBefore) return;
+      if (isMutableSlot) return;
+      if (isMistakeSlot) setMistakeIds(mistakeIds.filter(id => id !== selectedId));
 
-    return setBoard(newBoard);
-  };
-  const toggleFocus = (target: HTMLDivElement, isSelected: boolean, id: Id) => {
-    if (isSelected) {
-      setSelectedId(null);
-      target.blur();
-      return;
-    }
-    setSelectedId(id);
-    target.focus();
-  };
+      const [newBoard, state] = editSlot(board, selectedId, slot);
+      if (state === 'mistake') setMistakeIds(ids => ids.concat(selectedId));
+
+      return setBoard(newBoard);
+    },
+    [board, mistakeIds, selectedId],
+  );
+
+  const moveSelectedSlot = useCallback(
+    (key: string) => {
+      const dir = keyToDir(key);
+      if (dir == null) return;
+      setSelectedId(selectedId === null ? null : moveInBoard(selectedId, dir));
+    },
+    [selectedId],
+  );
+
+  useEffect(() => {
+    const handleEditViewSlot = ({ key }: KeyboardEvent) => editViewSlot(key);
+    const handleMoveSelectedSlot = ({ key }: KeyboardEvent) => moveSelectedSlot(key);
+
+    document.addEventListener('keydown', handleEditViewSlot);
+    document.addEventListener('keydown', handleMoveSelectedSlot);
+
+    return () => {
+      document.removeEventListener('keydown', handleEditViewSlot);
+      document.removeEventListener('keydown', handleMoveSelectedSlot);
+    };
+  }, [editViewSlot, moveSelectedSlot]);
+
+  const selectSlot = (isSelected: boolean, id: Id) => setSelectedId(isSelected ? null : id);
 
   return (
     <Container>
@@ -84,7 +108,7 @@ export const Board: React.FC = () => {
           <Block key={blockColIndex + blockRowIndex}>
             {blocks.map((slots, slotRowIndex) =>
               slots.map((slot, slotColIndex) => {
-                const id = toId(blockRowIndex, blockColIndex, slotRowIndex, slotColIndex);
+                const id = toId([blockRowIndex, blockColIndex, slotRowIndex, slotColIndex]);
                 const isSelected = id === selectedId;
                 const isMistake = mistakeIds.includes(id);
                 return (
@@ -92,9 +116,7 @@ export const Board: React.FC = () => {
                     isSelected={isSelected}
                     isMistake={isMistake}
                     key={id}
-                    tabIndex={0}
-                    onKeyDown={({ key }) => onSlotChange(key, id, slot)}
-                    onClick={({ currentTarget }) => toggleFocus(currentTarget, isSelected, id)}
+                    onClick={() => selectSlot(isSelected, id)}
                   >
                     {slot}
                   </Slot>
