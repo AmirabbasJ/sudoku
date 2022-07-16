@@ -60,10 +60,13 @@ export const keyToDir = (key: string): Direction | null =>
     ? 'Right'
     : null;
 
-export const moveInBoard = (id: Id, dir: Direction): Id => {
-  if (dir === 'Up') return moveUp(id);
-  if (dir === 'Down') return moveDown(id);
-  if (dir === 'Right') return moveRight(id);
-  if (dir === 'Left') return moveLeft(id);
-  return id;
-};
+export const moveInBoard = (id: Id, dir: Direction): Id =>
+  dir === 'Up'
+    ? moveUp(id)
+    : dir === 'Down'
+    ? moveDown(id)
+    : dir === 'Right'
+    ? moveRight(id)
+    : dir === 'Left'
+    ? moveLeft(id)
+    : id;
