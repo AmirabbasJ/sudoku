@@ -6,7 +6,6 @@ import { editSlot, getSlot } from '../domain/Board';
 import { keyToDir, moveInBoard } from '../domain/Direction';
 import type { Id } from '../domain/Id';
 import { toId } from '../domain/Id';
-import type { Slot as ISlot } from '../domain/Slot';
 import { parseSlot } from '../domain/Slot';
 import { getBoard } from '../getBoard';
 
@@ -53,7 +52,7 @@ export const Board: React.FC = () => {
   const [mistakeIds, setMistakeIds] = useState<Id[]>([]);
   const [selectedId, setSelectedId] = useState<Id | null>(null);
 
-  const onSlotChange = useCallback(
+  const editViewSlot = useCallback(
     (key: string) => {
       if (selectedId == null) return;
 
@@ -68,7 +67,7 @@ export const Board: React.FC = () => {
       if (failedToParse) return;
       if (slotIsTheSameAsBefore) return;
       if (isMutableSlot) return;
-      if (isMistakeSlot) setMistakeIds(mistakeIds.filter(i => i !== selectedId));
+      if (isMistakeSlot) setMistakeIds(mistakeIds.filter(id => id !== selectedId));
 
       const [newBoard, state] = editSlot(board, selectedId, slot);
       if (state === 'mistake') setMistakeIds(ids => ids.concat(selectedId));
@@ -78,24 +77,27 @@ export const Board: React.FC = () => {
     [board, mistakeIds, selectedId],
   );
 
-  const moveSelectedSlot = (key: string) => {
-    const dir = keyToDir(key);
-    if (dir == null) return;
-    setSelectedId(id => (id === null ? null : moveInBoard(id, dir)));
-  };
+  const moveSelectedSlot = useCallback(
+    (key: string) => {
+      const dir = keyToDir(key);
+      if (dir == null) return;
+      setSelectedId(selectedId === null ? null : moveInBoard(selectedId, dir));
+    },
+    [selectedId],
+  );
 
   useEffect(() => {
-    const handleOnSlotChange = ({ key }: KeyboardEvent) => onSlotChange(key);
+    const handleEditViewSlot = ({ key }: KeyboardEvent) => editViewSlot(key);
     const handleMoveSelectedSlot = ({ key }: KeyboardEvent) => moveSelectedSlot(key);
 
-    document.addEventListener('keydown', handleOnSlotChange);
+    document.addEventListener('keydown', handleEditViewSlot);
     document.addEventListener('keydown', handleMoveSelectedSlot);
 
     return () => {
-      document.removeEventListener('keydown', handleOnSlotChange);
+      document.removeEventListener('keydown', handleEditViewSlot);
       document.removeEventListener('keydown', handleMoveSelectedSlot);
     };
-  }, [onSlotChange]);
+  }, [editViewSlot, moveSelectedSlot]);
 
   const selectSlot = (isSelected: boolean, id: Id) => setSelectedId(isSelected ? null : id);
 
