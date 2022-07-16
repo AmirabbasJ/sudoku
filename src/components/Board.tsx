@@ -54,13 +54,13 @@ export const Board: React.FC = () => {
   const [selectedId, setSelectedId] = useState<Id | null>(null);
 
   useEffect(() => {
-    const changeSelectedSlot = ({ key }: KeyboardEvent) => {
+    const moveSelectedSlot = ({ key }: KeyboardEvent) => {
       const dir = keyToDir(key);
       if (dir == null) return;
       setSelectedId(id => (id === null ? null : moveInBoard(id, dir)));
     };
-    document.addEventListener('keydown', changeSelectedSlot);
-    return () => document.removeEventListener('keydown', changeSelectedSlot);
+    document.addEventListener('keydown', moveSelectedSlot);
+    return () => document.removeEventListener('keydown', moveSelectedSlot);
   }, []);
 
   const onSlotChange = (key: string, id: Id, currSlot: ISlot) => {
