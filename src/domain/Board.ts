@@ -8,6 +8,8 @@ import { isValidNumericSlot } from './Slot';
 export type Block = [[Slot, Slot, Slot], [Slot, Slot, Slot], [Slot, Slot, Slot]];
 export type Board = [[Block, Block, Block], [Block, Block, Block], [Block, Block, Block]];
 
+export const getSlot = (board: Board, id: Id): Slot => R.path(idToBoardIndex(id), board) as Slot;
+
 const setSlot = (board: Board, id: Id, slot: Slot) => {
   const boardIndex = idToBoardIndex(id);
   return R.assocPath(boardIndex, slot, board);
