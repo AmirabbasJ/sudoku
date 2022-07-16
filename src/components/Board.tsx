@@ -93,16 +93,19 @@ export const Board: React.FC = () => {
 
   useEffect(() => {
     const handleEditViewSlot = ({ key }: KeyboardEvent) => editViewSlot(key);
-    const handleMoveSelectedSlot = ({ key }: KeyboardEvent) => moveSelectedSlot(key);
-
     document.addEventListener('keydown', handleEditViewSlot);
-    document.addEventListener('keydown', handleMoveSelectedSlot);
-
     return () => {
       document.removeEventListener('keydown', handleEditViewSlot);
+    };
+  }, [editViewSlot]);
+
+  useEffect(() => {
+    const handleMoveSelectedSlot = ({ key }: KeyboardEvent) => moveSelectedSlot(key);
+    document.addEventListener('keydown', handleMoveSelectedSlot);
+    return () => {
       document.removeEventListener('keydown', handleMoveSelectedSlot);
     };
-  }, [editViewSlot, moveSelectedSlot]);
+  }, [moveSelectedSlot]);
 
   const selectSlot = (isSelected: boolean, id: Id) => setSelectedId(isSelected ? null : id);
 
