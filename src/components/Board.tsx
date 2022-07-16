@@ -81,16 +81,7 @@ export const Board: React.FC = () => {
 
     return setBoard(newBoard);
   };
-  // TODO: remove focusing and refactor
-  const toggleFocus = (target: HTMLDivElement, isSelected: boolean, id: Id) => {
-    if (isSelected) {
-      setSelectedId(null);
-      target.blur();
-      return;
-    }
-    setSelectedId(id);
-    target.focus();
-  };
+  const toggleFocus = (isSelected: boolean, id: Id) => setSelectedId(isSelected ? null : id);
 
   return (
     <Container>
@@ -109,7 +100,7 @@ export const Board: React.FC = () => {
                     key={id}
                     tabIndex={0}
                     onKeyDown={({ key }) => onSlotChange(key, id, slot)}
-                    onClick={({ currentTarget }) => toggleFocus(currentTarget, isSelected, id)}
+                    onClick={() => toggleFocus(isSelected, id)}
                   >
                     {slot}
                   </Slot>
