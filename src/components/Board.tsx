@@ -81,7 +81,7 @@ export const Board: React.FC = () => {
 
     return setBoard(newBoard);
   };
-  const toggleFocus = (isSelected: boolean, id: Id) => setSelectedId(isSelected ? null : id);
+  const selectSlot = (isSelected: boolean, id: Id) => setSelectedId(isSelected ? null : id);
 
   return (
     <Container>
@@ -100,7 +100,7 @@ export const Board: React.FC = () => {
                     key={id}
                     tabIndex={0}
                     onKeyDown={({ key }) => onSlotChange(key, id, slot)}
-                    onClick={() => toggleFocus(isSelected, id)}
+                    onClick={() => selectSlot(isSelected, id)}
                   >
                     {slot}
                   </Slot>
