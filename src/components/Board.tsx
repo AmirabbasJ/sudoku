@@ -1,8 +1,9 @@
 /* eslint-disable react/no-array-index-key */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { editSlot } from '../domain/Board';
+import { keyToDir, moveInBoard } from '../domain/Direction';
 import type { Id } from '../domain/Id';
 import { toId } from '../domain/Id';
 import type { Slot as ISlot } from '../domain/Slot';
@@ -49,8 +50,20 @@ const Slot = styled.div<{ isSelected: boolean; isMistake: boolean }>`
 const initBoard = getBoard();
 export const Board: React.FC = () => {
   const [board, setBoard] = useState(initBoard);
-  const [selectedId, setSelectedId] = useState<Id | null>(null);
   const [mistakeIds, setMistakeIds] = useState<Id[]>([]);
+  const [selectedId, setSelectedId] = useState<Id | null>(null);
+
+  useEffect(() => {
+    const changeSelectedSlot = ({ key }: KeyboardEvent) => {
+      const dir = keyToDir(key);
+      if (dir == null) return;
+      setSelectedId(id => (id === null ? null : moveInBoard(id, dir)));
+    };
+    document.addEventListener('keydown', changeSelectedSlot);
+    return () => {
+      document.removeEventListener('keydown', changeSelectedSlot);
+    };
+  }, []);
 
   const onSlotChange = (key: string, id: Id, currSlot: ISlot) => {
     const slot = parseSlot(key);
@@ -70,7 +83,7 @@ export const Board: React.FC = () => {
 
     return setBoard(newBoard);
   };
-
+  // TODO: remove focusing and refactor
   const toggleFocus = (target: HTMLDivElement, isSelected: boolean, id: Id) => {
     if (isSelected) {
       setSelectedId(null);
