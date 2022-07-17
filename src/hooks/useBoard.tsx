@@ -4,8 +4,8 @@ import { BoardCtx } from '../context/BoardCtx';
 import type { Direction } from '../domain/Direction';
 import { moveInBoard } from '../domain/Direction';
 import type { Id } from '../domain/Id';
-import type { Slot } from '../domain/Slot';
-import { editSlot, getSlot, isValidSlot } from '../domain/Slot';
+import type { NumericSlot } from '../domain/Slot';
+import { deleteSlot, editSlot, getSlot, isValidSlot, Slot } from '../domain/Slot';
 
 export const useBoard = () => {
   const { board, setBoard, mutableIds, selectedId, setSelectedId, mistakeIds, setMistakeIds } = useContext(BoardCtx);
@@ -18,8 +18,13 @@ export const useBoard = () => {
 
   useEffect(() => recheckMistakeValidity(), [board, recheckMistakeValidity]);
 
+  const deleteViewSlot = () => {
+    if (selectedId == null) return;
+    deleteSlot(board, selectedId);
+  };
+
   const editViewSlot = useCallback(
-    (slot: Slot) => {
+    (slot: NumericSlot) => {
       if (selectedId == null) return;
 
       const currSlot = getSlot(board, selectedId);
@@ -46,5 +51,5 @@ export const useBoard = () => {
 
   const selectSlot = (isSelected: boolean, id: Id) => setSelectedId(isSelected ? null : id);
 
-  return { board, mutableIds, selectedId, mistakeIds, editViewSlot, moveSelectedSlot, selectSlot };
+  return { board, mutableIds, selectedId, mistakeIds, editViewSlot, moveSelectedSlot, selectSlot, deleteViewSlot };
 };

@@ -38,7 +38,12 @@ export const isValidSlot = (board: Board, id: Id, slot: Slot) =>
 
 export const getSlot = (board: Board, id: Id): Slot => R.path(idToBoardIndex(id), board) as Slot;
 
-export const editSlot = (board: Board, id: Id, slot: Slot): [Board, SlotState] => {
+export const deleteSlot = (board: Board, id: Id): Board => {
+  const newBoard = setBoard(board, id, '');
+  return newBoard;
+};
+
+export const editSlot = (board: Board, id: Id, slot: NumericSlot): [Board, SlotState] => {
   const validSlot = isValidSlot(board, id, slot);
   const newBoard = setBoard(board, id, slot);
   const state: SlotState = !validSlot ? 'mistake' : 'correct';
