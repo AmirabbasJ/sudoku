@@ -20,7 +20,7 @@ export const useBoard = () => {
 
   const deleteSelectedSlot = () => {
     if (selectedId == null) return;
-    deleteSlot(board, selectedId);
+    setBoard(deleteSlot(board, selectedId));
   };
 
   const editSelectedSlot = useCallback(
