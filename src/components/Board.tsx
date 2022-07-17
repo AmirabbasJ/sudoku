@@ -49,7 +49,7 @@ const initBoard = getBoard();
 export const Board: React.FC = () => {
   const [board, setBoard] = useState(initBoard);
   const [mistakeIds, setMistakeIds] = useState<Id[]>([]);
-  const [mutableIds, setMutableIds] = useState<Id[]>(() => getMutableSlots(board));
+  const [mutableIds, _] = useState<Id[]>(() => getMutableSlots(board));
   const [selectedId, setSelectedId] = useState<Id | null>(null);
 
   const recheckMistakeValidity = useCallback(() => {
@@ -77,7 +77,6 @@ export const Board: React.FC = () => {
 
       const [newBoard, state] = editSlot(board, selectedId, slot);
       if (state === 'mistake') setMistakeIds(ids => ids.concat(selectedId));
-      setMutableIds(ids => ids.concat(selectedId));
       return setBoard(newBoard);
     },
     [board, mistakeIds, mutableIds, selectedId],
