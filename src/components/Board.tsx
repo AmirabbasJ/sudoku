@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { keyToDir } from '../domain/Direction';
@@ -10,10 +10,10 @@ import { useBoard } from '../hooks/useBoard';
 const Container = styled.div`
   background-color: black;
   display: grid;
-  grid-gap: 2px;
+  grid-gap: 0.125rem;
   justify-items: center;
   align-items: center;
-  border: 2px solid black;
+  border: 0.125rem solid black;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
 `;
@@ -22,7 +22,7 @@ const Block = styled.div`
   display: grid;
   justify-items: center;
   align-items: center;
-  grid-gap: 1px;
+  grid-gap: 0.0625rem;
   border-left: none;
   background-color: black;
   border-bottom: none;
@@ -47,29 +47,37 @@ const Slot = styled.div<{ isSelected: boolean; isMistake: boolean; isMutable: bo
 export const Board: React.FC = () => {
   const { board, editViewSlot, mistakeIds, moveSelectedSlot, mutableIds, selectSlot, selectedId } = useBoard();
 
-  useEffect(() => {
-    const editSlotOnKeydown = ({ key }: KeyboardEvent) => {
+  const editSlotOnKeydown = useCallback(
+    ({ key }: KeyboardEvent) => {
       const slot = parseSlot(key);
       if (slot == null) return;
       editViewSlot(slot);
-    };
+    },
+    [editViewSlot],
+  );
+
+  useEffect(() => {
     document.addEventListener('keydown', editSlotOnKeydown);
     return () => {
       document.removeEventListener('keydown', editSlotOnKeydown);
     };
-  }, [editViewSlot]);
+  }, [editSlotOnKeydown]);
 
-  useEffect(() => {
-    const moveOnKeydown = ({ key }: KeyboardEvent) => {
+  const moveOnKeydown = useCallback(
+    ({ key }: KeyboardEvent) => {
       const dir = keyToDir(key);
       if (dir == null) return;
       moveSelectedSlot(dir);
-    };
+    },
+    [moveSelectedSlot],
+  );
+
+  useEffect(() => {
     document.addEventListener('keydown', moveOnKeydown);
     return () => {
       document.removeEventListener('keydown', moveOnKeydown);
     };
-  }, [moveSelectedSlot]);
+  }, [moveOnKeydown]);
 
   return (
     <Container>
