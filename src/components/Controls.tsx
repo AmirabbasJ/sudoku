@@ -12,7 +12,7 @@ const Div = styled.div`
 export const Controls: React.FC = () => {
   return (
     <Div>
-      <EraseBtn />
+      <EraseBtn onClick={() => {}} />
     </Div>
   );
 };

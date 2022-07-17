@@ -3,6 +3,10 @@ import styled from 'styled-components';
 
 const Button = styled.button``;
 
-export const EraseBtn: React.FC = () => {
-  return <Button>erase</Button>;
+interface EraseBtnProps {
+  onClick: () => void;
+}
+
+export const EraseBtn: React.FC<EraseBtnProps> = ({ onClick }) => {
+  return <Button onClick={onClick}>erase</Button>;
 };
