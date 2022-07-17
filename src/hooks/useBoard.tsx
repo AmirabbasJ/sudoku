@@ -18,12 +18,12 @@ export const useBoard = () => {
 
   useEffect(() => recheckMistakeValidity(), [board, recheckMistakeValidity]);
 
-  const deleteViewSlot = () => {
+  const deleteSelectedSlot = () => {
     if (selectedId == null) return;
     deleteSlot(board, selectedId);
   };
 
-  const editViewSlot = useCallback(
+  const editSelectedSlot = useCallback(
     (slot: NumericSlot) => {
       if (selectedId == null) return;
 
@@ -51,5 +51,14 @@ export const useBoard = () => {
 
   const selectSlot = (isSelected: boolean, id: Id) => setSelectedId(isSelected ? null : id);
 
-  return { board, mutableIds, selectedId, mistakeIds, editViewSlot, moveSelectedSlot, selectSlot, deleteViewSlot };
+  return {
+    board,
+    mutableIds,
+    selectedId,
+    mistakeIds,
+    editSelectedSlot,
+    moveSelectedSlot,
+    selectSlot,
+    deleteSelectedSlot,
+  };
 };

@@ -47,17 +47,25 @@ const Slot = styled.div<{ isSelected: boolean; isMistake: boolean; isMutable: bo
 `;
 
 export const Board: React.FC = () => {
-  const { board, editViewSlot, deleteViewSlot, mistakeIds, moveSelectedSlot, mutableIds, selectSlot, selectedId } =
-    useBoard();
+  const {
+    board,
+    editSelectedSlot,
+    deleteSelectedSlot,
+    mistakeIds,
+    moveSelectedSlot,
+    mutableIds,
+    selectSlot,
+    selectedId,
+  } = useBoard();
 
   const editSlotOnKeydown = useCallback(
     ({ key }: KeyboardEvent) => {
       const slot = parseSlot(key);
       if (slot == null) return;
-      if (slot === '') return deleteViewSlot();
-      return editViewSlot(slot);
+      if (slot === '') return deleteSelectedSlot();
+      return editSelectedSlot(slot);
     },
-    [editViewSlot, deleteViewSlot],
+    [editSelectedSlot, deleteSelectedSlot],
   );
 
   useEffect(() => {
