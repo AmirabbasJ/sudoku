@@ -45,7 +45,7 @@ export const editSlot = (board: Board, id: Id, slot: Slot): [Board, SlotState] =
   return [newBoard, state];
 };
 
-export const getMutableSlots = (board: Board) => {
+export const getMutableSlotIds = (board: Board) => {
   return board
     .map((blockRow, blockRowIndex) =>
       blockRow.map((blocks, blockColIndex) =>

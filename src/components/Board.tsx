@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { keyToDir, moveInBoard } from '../domain/Direction';
 import type { Id } from '../domain/Id';
 import { toId } from '../domain/Id';
-import { editSlot, getMutableSlots, getSlot, isValidSlot, parseSlot } from '../domain/Slot';
+import { editSlot, getMutableSlotIds, getSlot, isValidSlot, parseSlot } from '../domain/Slot';
 import { getBoard } from '../getBoard';
 
 const Container = styled.div`
@@ -49,7 +49,7 @@ const initBoard = getBoard();
 export const Board: React.FC = () => {
   const [board, setBoard] = useState(initBoard);
   const [mistakeIds, setMistakeIds] = useState<Id[]>([]);
-  const [mutableIds, _] = useState<Id[]>(() => getMutableSlots(board));
+  const [mutableIds, _] = useState<Id[]>(() => getMutableSlotIds(board));
   const [selectedId, setSelectedId] = useState<Id | null>(null);
 
   const recheckMistakeValidity = useCallback(() => {
