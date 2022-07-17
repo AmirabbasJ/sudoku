@@ -52,7 +52,9 @@ export const Board: React.FC = () => {
   const [selectedId, setSelectedId] = useState<Id | null>(null);
 
   const recheckMistakeValidity = useCallback(() => {
-    setMistakeIds(mids => mids.filter(id => !isValidSlot(board, id, getSlot(board, id))));
+    const newIds = mistakeIds.filter(id => !isValidSlot(board, id, getSlot(board, id)));
+    setMistakeIds(newIds);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [board]);
 
   const editViewSlot = useCallback(
@@ -97,6 +99,7 @@ export const Board: React.FC = () => {
     return () => {
       document.removeEventListener('keydown', handleEditViewSlot);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editViewSlot]);
 
   useEffect(() => {
