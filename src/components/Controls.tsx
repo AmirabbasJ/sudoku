@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { useBoard } from '../hooks/useBoard';
 import { EraseBtn } from './EraseBtn';
 
 const Div = styled.div`
@@ -10,9 +11,10 @@ const Div = styled.div`
 `;
 
 export const Controls: React.FC = () => {
+  const { deleteSelectedSlot } = useBoard();
   return (
     <Div>
-      <EraseBtn onClick={() => {}} />
+      <EraseBtn onClick={deleteSelectedSlot} />
     </Div>
   );
 };
