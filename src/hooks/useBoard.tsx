@@ -20,6 +20,8 @@ export const useBoard = () => {
 
   const deleteSelectedSlot = () => {
     if (selectedId == null) return;
+    const isMutableSlot = mutableIds.includes(selectedId);
+    if (!isMutableSlot) return;
     setBoard(deleteSlot(board, selectedId));
   };
 
