@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { EraseBtn } from './EraseBtn';
+
 const Div = styled.div`
   width: 100%;
   height: 100%;
@@ -8,5 +10,9 @@ const Div = styled.div`
 `;
 
 export const Controls: React.FC = () => {
-  return <Div />;
+  return (
+    <Div>
+      <EraseBtn />
+    </Div>
+  );
 };
