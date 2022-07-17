@@ -8,6 +8,8 @@ import { parseSlot } from '../domain/Slot';
 import { useBoard } from '../hooks/useBoard';
 
 const Container = styled.div`
+  border-radius: 1rem;
+  overflow: hidden;
   background-color: black;
   display: grid;
   grid-gap: 0.125rem;
