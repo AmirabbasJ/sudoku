@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { keyToDir } from '../domain/Direction';
 import { toId } from '../domain/Id';
+import { parseSlot } from '../domain/Slot';
 import { useBoard } from '../hooks/useBoard';
 
 const Container = styled.div`
@@ -47,10 +48,14 @@ export const Board: React.FC = () => {
   const { board, editViewSlot, mistakeIds, moveSelectedSlot, mutableIds, selectSlot, selectedId } = useBoard();
 
   useEffect(() => {
-    const handleEditViewSlot = ({ key }: KeyboardEvent) => editViewSlot(key);
-    document.addEventListener('keydown', handleEditViewSlot);
+    const editSlotOnKeydown = ({ key }: KeyboardEvent) => {
+      const slot = parseSlot(key);
+      if (slot == null) return;
+      editViewSlot(slot);
+    };
+    document.addEventListener('keydown', editSlotOnKeydown);
     return () => {
-      document.removeEventListener('keydown', handleEditViewSlot);
+      document.removeEventListener('keydown', editSlotOnKeydown);
     };
   }, [editViewSlot]);
 

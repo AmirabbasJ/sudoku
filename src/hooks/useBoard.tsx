@@ -4,7 +4,8 @@ import { BoardCtx } from '../context/BoardCtx';
 import type { Direction } from '../domain/Direction';
 import { moveInBoard } from '../domain/Direction';
 import type { Id } from '../domain/Id';
-import { editSlot, getSlot, isValidSlot, parseSlot } from '../domain/Slot';
+import type { Slot } from '../domain/Slot';
+import { editSlot, getSlot, isValidSlot } from '../domain/Slot';
 
 export const useBoard = () => {
   const { board, setBoard, mutableIds, selectedId, setSelectedId, mistakeIds, setMistakeIds } = useContext(BoardCtx);
@@ -18,18 +19,15 @@ export const useBoard = () => {
   useEffect(() => recheckMistakeValidity(), [board, recheckMistakeValidity]);
 
   const editViewSlot = useCallback(
-    (key: string) => {
+    (slot: Slot) => {
       if (selectedId == null) return;
 
       const currSlot = getSlot(board, selectedId);
-      const slot = parseSlot(key);
-      const failedToParse = slot == null;
       const slotIsTheSameAsBefore = slot === currSlot;
       const isEmptySlot = currSlot === '';
       const isMistakeSlot = mistakeIds.includes(selectedId);
       const isMutableSlot = isEmptySlot || mutableIds.includes(selectedId);
 
-      if (failedToParse) return;
       if (slotIsTheSameAsBefore) return;
       if (!isMutableSlot) return;
       if (isMistakeSlot) setMistakeIds(mistakeIds.filter(id => id !== selectedId));
