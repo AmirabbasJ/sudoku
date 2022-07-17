@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { keyToDir, moveInBoard } from '../domain/Direction';
 import type { Id } from '../domain/Id';
 import { toId } from '../domain/Id';
-import { editSlot, getSlot, isValidSlot, parseSlot } from '../domain/Slot';
+import { editSlot, getMutableSlots, getSlot, isValidSlot, parseSlot } from '../domain/Slot';
 import { getBoard } from '../getBoard';
 
 const Container = styled.div`
@@ -31,11 +31,11 @@ const Block = styled.div`
   grid-template-rows: 1fr 1fr 1fr;
 `;
 
-const Slot = styled.div<{ isSelected: boolean; isMistake: boolean }>`
+const Slot = styled.div<{ isSelected: boolean; isMistake: boolean; isMutable: boolean }>`
   width: 4rem;
   height: 4rem;
-  background-color: ${({ isSelected, isMistake }) => (isSelected ? '#b2d8ff' : isMistake ? '#ffdbdb' : 'white')};
-  color: ${({ isMistake }) => (isMistake ? 'tomato' : 'initial')};
+  background-color: ${({ isSelected, isMistake }) => (isSelected ? '#dbecff' : isMistake ? '#ffdbdb' : 'white')};
+  color: ${({ isMistake, isMutable }) => (isMistake ? 'tomato' : isMutable ? 'royalblue' : 'initial')};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -49,6 +49,7 @@ const initBoard = getBoard();
 export const Board: React.FC = () => {
   const [board, setBoard] = useState(initBoard);
   const [mistakeIds, setMistakeIds] = useState<Id[]>([]);
+  const [mutableIds, setMutableIds] = useState<Id[]>(() => getMutableSlots(board));
   const [selectedId, setSelectedId] = useState<Id | null>(null);
 
   const recheckMistakeValidity = useCallback(() => {
@@ -67,19 +68,19 @@ export const Board: React.FC = () => {
       const slotIsTheSameAsBefore = slot === currSlot;
       const isEmptySlot = currSlot === '';
       const isMistakeSlot = mistakeIds.includes(selectedId);
-      const isMutableSlot = !isEmptySlot && !isMistakeSlot;
+      const isMutableSlot = isEmptySlot || mutableIds.includes(selectedId);
 
       if (failedToParse) return;
       if (slotIsTheSameAsBefore) return;
-      if (isMutableSlot) return;
+      if (!isMutableSlot) return;
       if (isMistakeSlot) setMistakeIds(mistakeIds.filter(id => id !== selectedId));
 
       const [newBoard, state] = editSlot(board, selectedId, slot);
       if (state === 'mistake') setMistakeIds(ids => ids.concat(selectedId));
-
+      setMutableIds(ids => ids.concat(selectedId));
       return setBoard(newBoard);
     },
-    [board, mistakeIds, selectedId],
+    [board, mistakeIds, mutableIds, selectedId],
   );
 
   const moveSelectedSlot = useCallback(
@@ -122,8 +123,10 @@ export const Board: React.FC = () => {
                 const id = toId([blockRowIndex, blockColIndex, slotRowIndex, slotColIndex]);
                 const isSelected = id === selectedId;
                 const isMistake = mistakeIds.includes(id);
+                const isMutable = mutableIds.includes(id);
                 return (
                   <Slot
+                    isMutable={isMutable}
                     isSelected={isSelected}
                     isMistake={isMistake}
                     key={id}

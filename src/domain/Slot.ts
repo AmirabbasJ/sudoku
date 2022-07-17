@@ -3,7 +3,7 @@ import * as R from 'ramda';
 import type { Board } from './Board';
 import { setBoard } from './Board';
 import type { Id } from './Id';
-import { idToBoardIndex } from './Id';
+import { idToBoardIndex, toId } from './Id';
 
 export type NumericSlot = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 export type EmptySlot = '';
@@ -43,4 +43,18 @@ export const editSlot = (board: Board, id: Id, slot: Slot): [Board, SlotState] =
   const newBoard = setBoard(board, id, slot);
   const state: SlotState = !validSlot ? 'mistake' : 'correct';
   return [newBoard, state];
+};
+
+export const getMutableSlots = (board: Board) => {
+  return board
+    .map((blockRow, blockRowIndex) =>
+      blockRow.map((blocks, blockColIndex) =>
+        blocks.map((slots, slotRowIndex) =>
+          slots.flatMap((slot, slotColIndex) =>
+            slot === '' ? [toId([blockRowIndex, blockColIndex, slotRowIndex, slotColIndex])] : [],
+          ),
+        ),
+      ),
+    )
+    .flat(3);
 };
