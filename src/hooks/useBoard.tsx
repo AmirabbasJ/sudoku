@@ -1,7 +1,8 @@
 import { useCallback, useContext, useEffect } from 'react';
 
 import { BoardCtx } from '../context/BoardCtx';
-import { keyToDir, moveInBoard } from '../domain/Direction';
+import type { Direction } from '../domain/Direction';
+import { moveInBoard } from '../domain/Direction';
 import type { Id } from '../domain/Id';
 import { editSlot, getSlot, isValidSlot, parseSlot } from '../domain/Slot';
 
@@ -41,11 +42,7 @@ export const useBoard = () => {
   );
 
   const moveSelectedSlot = useCallback(
-    (key: string) => {
-      const dir = keyToDir(key);
-      if (dir == null) return;
-      setSelectedId(selectedId === null ? null : moveInBoard(selectedId, dir));
-    },
+    (dir: Direction) => setSelectedId(selectedId === null ? null : moveInBoard(selectedId, dir)),
     [selectedId, setSelectedId],
   );
 

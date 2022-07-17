@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import styled from 'styled-components';
 
+import { keyToDir } from '../domain/Direction';
 import { toId } from '../domain/Id';
 import { useBoard } from '../hooks/useBoard';
 
@@ -54,10 +55,14 @@ export const Board: React.FC = () => {
   }, [editViewSlot]);
 
   useEffect(() => {
-    const handleMoveSelectedSlot = ({ key }: KeyboardEvent) => moveSelectedSlot(key);
-    document.addEventListener('keydown', handleMoveSelectedSlot);
+    const moveOnKeydown = ({ key }: KeyboardEvent) => {
+      const dir = keyToDir(key);
+      if (dir == null) return;
+      moveSelectedSlot(dir);
+    };
+    document.addEventListener('keydown', moveOnKeydown);
     return () => {
-      document.removeEventListener('keydown', handleMoveSelectedSlot);
+      document.removeEventListener('keydown', moveOnKeydown);
     };
   }, [moveSelectedSlot]);
 
