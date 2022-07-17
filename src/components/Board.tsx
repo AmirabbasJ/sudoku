@@ -24,7 +24,7 @@ const Block = styled.div`
   align-items: center;
   grid-gap: 0.0625rem;
   border-left: none;
-  background-color: black;
+  background-color: #c0c0c0;
   border-bottom: none;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
