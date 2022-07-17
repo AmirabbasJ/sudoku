@@ -13,6 +13,9 @@ interface BoardCtx {
   selectedId: Id | null;
   setSelectedId: (i: Id | null) => void;
 
+  mistakeIds: Id[];
+  setMistakeIds: (i: Id[]) => void;
+
   mutableIds: Id[];
 }
 
@@ -23,11 +26,13 @@ const initBoard = getBoard();
 export const BoardCtxProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [board, setBoard] = useState(initBoard);
   const [selectedId, setSelectedId] = useState<Id | null>(null);
+  const [mistakeIds, setMistakeIds] = useState<Id[]>([]);
+
   const mutableIds = useMemo(() => getMutableSlotIds(board), []);
 
   const ctx = useMemo(
-    (): BoardCtx => ({ board, setBoard, selectedId, setSelectedId, mutableIds }),
-    [board, selectedId, mutableIds],
+    (): BoardCtx => ({ board, setBoard, selectedId, setSelectedId, mutableIds, mistakeIds, setMistakeIds }),
+    [board, selectedId, mutableIds, mistakeIds],
   );
 
   return <BoardCtx.Provider value={ctx}>{children}</BoardCtx.Provider>;

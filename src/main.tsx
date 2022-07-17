@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import styled from 'styled-components';
 
 import { Board } from './components/Board';
+import { BoardCtxProvider } from './context/BoardCtx';
 import { GlobalStyle } from './GlobalStyles';
 
 const Container = styled.main`
@@ -18,9 +19,11 @@ const Container = styled.main`
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <GlobalStyle />
-    <Container>
-      <Board />
-    </Container>
+    <BoardCtxProvider>
+      <GlobalStyle />
+      <Container>
+        <Board />
+      </Container>
+    </BoardCtxProvider>
   </React.StrictMode>,
 );

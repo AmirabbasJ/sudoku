@@ -1,12 +1,9 @@
 /* eslint-disable react/no-array-index-key */
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 
-import { keyToDir, moveInBoard } from '../domain/Direction';
-import type { Id } from '../domain/Id';
 import { toId } from '../domain/Id';
-import { editSlot, getMutableSlotIds, getSlot, isValidSlot, parseSlot } from '../domain/Slot';
-import { getBoard } from '../getBoard';
+import { useBoard } from '../hooks/useBoard';
 
 const Container = styled.div`
   background-color: black;
@@ -45,53 +42,8 @@ const Slot = styled.div<{ isSelected: boolean; isMistake: boolean; isMutable: bo
   outline: none;
 `;
 
-const initBoard = getBoard();
 export const Board: React.FC = () => {
-  const [board, setBoard] = useState(initBoard);
-  const [mistakeIds, setMistakeIds] = useState<Id[]>([]);
-  const [mutableIds, _] = useState<Id[]>(() => getMutableSlotIds(board));
-  const [selectedId, setSelectedId] = useState<Id | null>(null);
-
-  const recheckMistakeValidity = useCallback(() => {
-    const newIds = mistakeIds.filter(id => !isValidSlot(board, id, getSlot(board, id)));
-    setMistakeIds(newIds);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [board]);
-
-  const editViewSlot = useCallback(
-    (key: string) => {
-      if (selectedId == null) return;
-
-      const currSlot = getSlot(board, selectedId);
-      const slot = parseSlot(key);
-      const failedToParse = slot == null;
-      const slotIsTheSameAsBefore = slot === currSlot;
-      const isEmptySlot = currSlot === '';
-      const isMistakeSlot = mistakeIds.includes(selectedId);
-      const isMutableSlot = isEmptySlot || mutableIds.includes(selectedId);
-
-      if (failedToParse) return;
-      if (slotIsTheSameAsBefore) return;
-      if (!isMutableSlot) return;
-      if (isMistakeSlot) setMistakeIds(mistakeIds.filter(id => id !== selectedId));
-
-      const [newBoard, state] = editSlot(board, selectedId, slot);
-      if (state === 'mistake') setMistakeIds(ids => ids.concat(selectedId));
-      return setBoard(newBoard);
-    },
-    [board, mistakeIds, mutableIds, selectedId],
-  );
-
-  const moveSelectedSlot = useCallback(
-    (key: string) => {
-      const dir = keyToDir(key);
-      if (dir == null) return;
-      setSelectedId(selectedId === null ? null : moveInBoard(selectedId, dir));
-    },
-    [selectedId],
-  );
-
-  useEffect(() => recheckMistakeValidity(), [board, recheckMistakeValidity]);
+  const { board, editViewSlot, mistakeIds, moveSelectedSlot, mutableIds, selectSlot, selectedId } = useBoard();
 
   useEffect(() => {
     const handleEditViewSlot = ({ key }: KeyboardEvent) => editViewSlot(key);
@@ -99,7 +51,6 @@ export const Board: React.FC = () => {
     return () => {
       document.removeEventListener('keydown', handleEditViewSlot);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editViewSlot]);
 
   useEffect(() => {
@@ -109,8 +60,6 @@ export const Board: React.FC = () => {
       document.removeEventListener('keydown', handleMoveSelectedSlot);
     };
   }, [moveSelectedSlot]);
-
-  const selectSlot = (isSelected: boolean, id: Id) => setSelectedId(isSelected ? null : id);
 
   return (
     <Container>
