@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Board } from './components/Board';
 import { GlobalStyle } from './GlobalStyles';
 
-const Container = styled.div`
+const Container = styled.main`
   padding: 2rem 4rem;
   margin: 0;
   box-sizing: border-box;
