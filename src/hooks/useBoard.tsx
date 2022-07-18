@@ -5,18 +5,36 @@ import type { Direction } from '../domain/Direction';
 import { moveInBoard } from '../domain/Direction';
 import type { Id } from '../domain/Id';
 import type { NumericSlot } from '../domain/Slot';
-import { deleteSlot, editSlot, getSlot, isValidSlot, Slot } from '../domain/Slot';
+import { deleteSlot, editSlot, getCoveredSlotIds, getSlot, isValidSlot } from '../domain/Slot';
 
 export const useBoard = () => {
-  const { board, setBoard, mutableIds, selectedId, setSelectedId, mistakeIds, setMistakeIds } = useContext(BoardCtx);
+  const {
+    board,
+    setBoard,
+    mutableIds,
+    selectedId,
+    setSelectedId,
+    mistakeIds,
+    setMistakeIds,
+    coveredSlotIds,
+    setCoveredSlotIds,
+  } = useContext(BoardCtx);
 
-  const recheckMistakeValidity = useCallback(() => {
+  const checkMistakes = useCallback(() => {
     const newIds = mistakeIds.filter(id => !isValidSlot(board, id, getSlot(board, id)));
     setMistakeIds(newIds);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [board]);
 
-  useEffect(() => recheckMistakeValidity(), [board, recheckMistakeValidity]);
+  const checkCoveredSlots = useCallback(() => {
+    if (selectedId == null) return setCoveredSlotIds([]);
+    const ids = getCoveredSlotIds(board, selectedId);
+    setCoveredSlotIds(ids);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedId]);
+
+  useEffect(() => checkMistakes(), [board, checkMistakes]);
+  useEffect(() => checkCoveredSlots(), [selectedId, checkCoveredSlots]);
 
   const deleteSelectedSlot = () => {
     if (selectedId == null) return;
@@ -62,5 +80,6 @@ export const useBoard = () => {
     moveSelectedSlot,
     selectSlot,
     deleteSelectedSlot,
+    coveredSlotIds,
   };
 };

@@ -4,8 +4,9 @@ import styled from 'styled-components';
 
 import { keyToDir } from '../domain/Direction';
 import { toId } from '../domain/Id';
-import { parseSlot } from '../domain/Slot';
+import { getSlot, parseSlot } from '../domain/Slot';
 import { useBoard } from '../hooks/useBoard';
+import { Slot } from './Slot';
 
 const Container = styled.div`
   border-radius: 1rem;
@@ -32,20 +33,6 @@ const Block = styled.div`
   grid-template-rows: 1fr 1fr 1fr;
 `;
 
-const Slot = styled.div<{ isSelected: boolean; isMistake: boolean; isMutable: boolean }>`
-  width: 4rem;
-  height: 4rem;
-  background-color: ${({ isSelected, isMistake }) => (isSelected ? '#dbecff' : isMistake ? '#ffdbdb' : 'white')};
-  color: ${({ isMistake, isMutable }) => (isMistake ? 'tomato' : isMutable ? 'royalblue' : 'initial')};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2.2em;
-  cursor: pointer;
-  user-select: none;
-  outline: none;
-`;
-
 export const Board: React.FC = () => {
   const {
     board,
@@ -56,6 +43,7 @@ export const Board: React.FC = () => {
     mutableIds,
     selectSlot,
     selectedId,
+    coveredSlotIds,
   } = useBoard();
 
   const editSlotOnKeydown = useCallback(
@@ -68,6 +56,15 @@ export const Board: React.FC = () => {
     [editSelectedSlot, deleteSelectedSlot],
   );
 
+  const moveOnKeydown = useCallback(
+    ({ key }: KeyboardEvent) => {
+      const dir = keyToDir(key);
+      if (dir == null) return;
+      return moveSelectedSlot(dir);
+    },
+    [moveSelectedSlot],
+  );
+
   useEffect(() => {
     document.addEventListener('keydown', editSlotOnKeydown);
     return () => {
@@ -75,21 +72,14 @@ export const Board: React.FC = () => {
     };
   }, [editSlotOnKeydown]);
 
-  const moveOnKeydown = useCallback(
-    ({ key }: KeyboardEvent) => {
-      const dir = keyToDir(key);
-      if (dir == null) return;
-      moveSelectedSlot(dir);
-    },
-    [moveSelectedSlot],
-  );
-
   useEffect(() => {
     document.addEventListener('keydown', moveOnKeydown);
     return () => {
       document.removeEventListener('keydown', moveOnKeydown);
     };
   }, [moveOnKeydown]);
+
+  const selectedSlot = selectedId == null ? null : getSlot(board, selectedId);
 
   return (
     <Container>
@@ -102,11 +92,15 @@ export const Board: React.FC = () => {
                 const isSelected = id === selectedId;
                 const isMistake = mistakeIds.includes(id);
                 const isMutable = mutableIds.includes(id);
+                const isCoveredSlot = coveredSlotIds.includes(id);
+                const hasSameContent = selectedSlot === slot && slot !== '';
                 return (
                   <Slot
                     isMutable={isMutable}
                     isSelected={isSelected}
                     isMistake={isMistake}
+                    isCoveredSlot={isCoveredSlot}
+                    hasSameContent={hasSameContent}
                     key={id}
                     onClick={() => selectSlot(isSelected, id)}
                   >
