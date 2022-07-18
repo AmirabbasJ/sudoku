@@ -1,20 +1,21 @@
 /* eslint-disable react/no-array-index-key */
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { keyToDir, moveInBoard } from '../domain/Direction';
-import type { Id } from '../domain/Id';
+import { keyToDir } from '../domain/Direction';
 import { toId } from '../domain/Id';
-import { editSlot, getSlot, isValidSlot, parseSlot } from '../domain/Slot';
-import { getBoard } from '../getBoard';
+import { parseSlot } from '../domain/Slot';
+import { useBoard } from '../hooks/useBoard';
 
 const Container = styled.div`
+  border-radius: 1rem;
+  overflow: hidden;
   background-color: black;
   display: grid;
-  grid-gap: 2px;
+  grid-gap: 0.125rem;
   justify-items: center;
   align-items: center;
-  border: 2px solid black;
+  border: 0.125rem solid black;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
 `;
@@ -23,19 +24,19 @@ const Block = styled.div`
   display: grid;
   justify-items: center;
   align-items: center;
-  grid-gap: 1px;
+  grid-gap: 0.0625rem;
   border-left: none;
-  background-color: black;
+  background-color: #c0c0c0;
   border-bottom: none;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
 `;
 
-const Slot = styled.div<{ isSelected: boolean; isMistake: boolean }>`
+const Slot = styled.div<{ isSelected: boolean; isMistake: boolean; isMutable: boolean }>`
   width: 4rem;
   height: 4rem;
-  background-color: ${({ isSelected, isMistake }) => (isSelected ? '#b2d8ff' : isMistake ? '#ffdbdb' : 'white')};
-  color: ${({ isMistake }) => (isMistake ? 'tomato' : 'initial')};
+  background-color: ${({ isSelected, isMistake }) => (isSelected ? '#dbecff' : isMistake ? '#ffdbdb' : 'white')};
+  color: ${({ isMistake, isMutable }) => (isMistake ? 'tomato' : isMutable ? 'royalblue' : 'initial')};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -45,69 +46,50 @@ const Slot = styled.div<{ isSelected: boolean; isMistake: boolean }>`
   outline: none;
 `;
 
-const initBoard = getBoard();
 export const Board: React.FC = () => {
-  const [board, setBoard] = useState(initBoard);
-  const [mistakeIds, setMistakeIds] = useState<Id[]>([]);
-  const [selectedId, setSelectedId] = useState<Id | null>(null);
+  const {
+    board,
+    editSelectedSlot,
+    deleteSelectedSlot,
+    mistakeIds,
+    moveSelectedSlot,
+    mutableIds,
+    selectSlot,
+    selectedId,
+  } = useBoard();
 
-  const recheckMistakeValidity = useCallback(() => {
-    setMistakeIds(mids => mids.filter(id => !isValidSlot(board, id, getSlot(board, id))));
-  }, [board]);
-
-  const editViewSlot = useCallback(
-    (key: string) => {
-      if (selectedId == null) return;
-
-      const currSlot = getSlot(board, selectedId);
+  const editSlotOnKeydown = useCallback(
+    ({ key }: KeyboardEvent) => {
       const slot = parseSlot(key);
-      const failedToParse = slot == null;
-      const slotIsTheSameAsBefore = slot === currSlot;
-      const isEmptySlot = currSlot === '';
-      const isMistakeSlot = mistakeIds.includes(selectedId);
-      const isMutableSlot = !isEmptySlot && !isMistakeSlot;
-
-      if (failedToParse) return;
-      if (slotIsTheSameAsBefore) return;
-      if (isMutableSlot) return;
-      if (isMistakeSlot) setMistakeIds(mistakeIds.filter(id => id !== selectedId));
-
-      const [newBoard, state] = editSlot(board, selectedId, slot);
-      if (state === 'mistake') setMistakeIds(ids => ids.concat(selectedId));
-
-      return setBoard(newBoard);
+      if (slot == null) return;
+      if (slot === '') return deleteSelectedSlot();
+      return editSelectedSlot(slot);
     },
-    [board, mistakeIds, selectedId],
+    [editSelectedSlot, deleteSelectedSlot],
   );
 
-  const moveSelectedSlot = useCallback(
-    (key: string) => {
+  useEffect(() => {
+    document.addEventListener('keydown', editSlotOnKeydown);
+    return () => {
+      document.removeEventListener('keydown', editSlotOnKeydown);
+    };
+  }, [editSlotOnKeydown]);
+
+  const moveOnKeydown = useCallback(
+    ({ key }: KeyboardEvent) => {
       const dir = keyToDir(key);
       if (dir == null) return;
-      setSelectedId(selectedId === null ? null : moveInBoard(selectedId, dir));
+      moveSelectedSlot(dir);
     },
-    [selectedId],
+    [moveSelectedSlot],
   );
 
-  useEffect(() => recheckMistakeValidity(), [board, recheckMistakeValidity]);
-
   useEffect(() => {
-    const handleEditViewSlot = ({ key }: KeyboardEvent) => editViewSlot(key);
-    document.addEventListener('keydown', handleEditViewSlot);
+    document.addEventListener('keydown', moveOnKeydown);
     return () => {
-      document.removeEventListener('keydown', handleEditViewSlot);
+      document.removeEventListener('keydown', moveOnKeydown);
     };
-  }, [editViewSlot]);
-
-  useEffect(() => {
-    const handleMoveSelectedSlot = ({ key }: KeyboardEvent) => moveSelectedSlot(key);
-    document.addEventListener('keydown', handleMoveSelectedSlot);
-    return () => {
-      document.removeEventListener('keydown', handleMoveSelectedSlot);
-    };
-  }, [moveSelectedSlot]);
-
-  const selectSlot = (isSelected: boolean, id: Id) => setSelectedId(isSelected ? null : id);
+  }, [moveOnKeydown]);
 
   return (
     <Container>
@@ -119,8 +101,10 @@ export const Board: React.FC = () => {
                 const id = toId([blockRowIndex, blockColIndex, slotRowIndex, slotColIndex]);
                 const isSelected = id === selectedId;
                 const isMistake = mistakeIds.includes(id);
+                const isMutable = mutableIds.includes(id);
                 return (
                   <Slot
+                    isMutable={isMutable}
                     isSelected={isSelected}
                     isMistake={isMistake}
                     key={id}

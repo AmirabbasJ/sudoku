@@ -3,24 +3,31 @@ import ReactDOM from 'react-dom/client';
 import styled from 'styled-components';
 
 import { Board } from './components/Board';
+import { Controls } from './components/Controls';
+import { BoardCtxProvider } from './context/BoardCtx';
 import { GlobalStyle } from './GlobalStyles';
 
-const Container = styled.div`
+const Container = styled.main`
   padding: 2rem 4rem;
   margin: 0;
   box-sizing: border-box;
   width: 100%;
   height: 100vh;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-content: center;
+  justify-items: center;
+  grid-gap: 1rem;
 `;
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <GlobalStyle />
-    <Container>
-      <Board />
-    </Container>
+    <BoardCtxProvider>
+      <GlobalStyle />
+      <Container>
+        <Board />
+        <Controls />
+      </Container>
+    </BoardCtxProvider>
   </React.StrictMode>,
 );
