@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { Button } from './Button';
-import { Eraser } from './Eraser';
+import { Eraser } from './Icons/Eraser';
 import { Title } from './Title';
 
 const Container = styled.div`

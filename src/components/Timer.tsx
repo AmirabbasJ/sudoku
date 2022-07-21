@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { formatTime } from '../domain/formatTime';
-import { Pause } from './Pause';
-import { Play } from './Play';
+import { Pause } from './Icons/Pause';
+import { Play } from './Icons/Play';
 
 const Slider = styled.div`
   width: 10rem;

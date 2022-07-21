@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Button } from './Button';
-import { Pencil } from './Pencil';
+import { Pencil } from './Icons/Pencil';
 import { Title } from './Title';
 
 const State = styled.p<{ isOn: boolean }>`
