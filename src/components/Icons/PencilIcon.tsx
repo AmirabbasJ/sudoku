@@ -1,4 +1,4 @@
-export const Pencil: React.FC = () => (
+export const PencilIcon: React.FC = () => (
   <svg
     display="block"
     version="1.1"

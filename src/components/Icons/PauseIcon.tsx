@@ -1,4 +1,4 @@
-export const Pause: React.FC = () => {
+export const PauseIcon: React.FC = () => {
   return (
     <svg
       version="1.1"

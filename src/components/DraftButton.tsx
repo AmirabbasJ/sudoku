@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Button } from './Button';
-import { Pencil } from './Icons/Pencil';
+import { PencilIcon } from './Icons/PencilIcon';
 import { Title } from './Title';
 
 const State = styled.p<{ isOn: boolean }>`
@@ -35,7 +35,7 @@ export const DraftButton: React.FC<DraftButtonProps> = ({ onClick, isOn, title }
   return (
     <Container>
       <Button onClick={onClick} withBorder={isOn}>
-        <Pencil />
+        <PencilIcon />
       </Button>
       <Title>{title}</Title>
       <State isOn={isOn}>{isOn ? 'ON' : 'OFF'}</State>

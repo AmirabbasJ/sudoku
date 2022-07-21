@@ -1,4 +1,4 @@
-export const Play: React.FC = () => {
+export const PlayIcon: React.FC = () => {
   return (
     <svg
       version="1.1"

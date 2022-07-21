@@ -1,4 +1,4 @@
-export const Eraser: React.FC = () => (
+export const EraserIcon: React.FC = () => (
   <svg
     version="1.1"
     x="0px"

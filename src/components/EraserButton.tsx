@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { Button } from './Button';
-import { Eraser } from './Icons/Eraser';
+import { EraserIcon } from './Icons/EraserIcon';
 import { Title } from './Title';
 
 const Container = styled.div`
@@ -17,7 +17,7 @@ export const EraserButton: React.FC<EraserButtonProps> = ({ onClick, title }) =>
   return (
     <Container>
       <Button onClick={onClick}>
-        <Eraser />
+        <EraserIcon />
       </Button>
       <Title>{title}</Title>
     </Container>
