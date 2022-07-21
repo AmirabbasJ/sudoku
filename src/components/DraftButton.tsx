@@ -3,14 +3,7 @@ import styled from 'styled-components';
 
 import { Button } from './Button';
 import { Pencil } from './Pencil';
-
-const Title = styled.p`
-  text-align: center;
-  padding: 0.5rem 0;
-  color: royalblue;
-  font-size: 1.1em;
-  cursor: default;
-`;
+import { Title } from './Title';
 
 const State = styled.p<{ isOn: boolean }>`
   position: absolute;
