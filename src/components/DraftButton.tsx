@@ -1,0 +1,51 @@
+import React from 'react';
+import styled from 'styled-components';
+
+import { Button } from './Button';
+import { Pencil } from './Pencil';
+
+const Title = styled.p`
+  text-align: center;
+  padding: 0.5rem 0;
+  color: royalblue;
+  font-size: 1.1em;
+  cursor: default;
+`;
+
+const State = styled.p<{ isOn: boolean }>`
+  position: absolute;
+  width: 2rem;
+  color: white;
+  font-size: 0.8em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 1.5rem;
+  border-radius: 100rem;
+  background-color: ${({ isOn }) => (isOn ? 'royalblue' : '#adb7c3')};
+  right: 0;
+  top: 0;
+  font-weight: bold;
+  transform: translate(0.6rem, -0.3rem);
+`;
+const Container = styled.div`
+  position: relative;
+`;
+
+interface DraftButtonProps {
+  onClick: () => void;
+  title: string;
+  isOn: boolean;
+}
+
+export const DraftButton: React.FC<DraftButtonProps> = ({ onClick, isOn, title }) => {
+  return (
+    <Container>
+      <Button onClick={onClick} withBorder={isOn}>
+        <Pencil />
+      </Button>
+      <Title>{title}</Title>
+      <State isOn={isOn}>{isOn ? 'ON' : 'OFF'}</State>
+    </Container>
+  );
+};

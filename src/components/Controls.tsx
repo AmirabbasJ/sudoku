@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import { useBoard } from '../hooks/useBoard';
-import { EraseBtn } from './EraseBtn';
+import { DraftButton } from './DraftButton';
+import { EraserButton } from './EraserButton';
 import { Timer } from './Timer';
 
-const Div = styled.div`
+const Container = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
@@ -14,10 +15,12 @@ const Div = styled.div`
 
 export const Controls: React.FC = () => {
   const { deleteSelectedSlot } = useBoard();
+  const [isOn, setIsOn] = useState(false);
   return (
-    <Div>
-      <EraseBtn onClick={deleteSelectedSlot} />
+    <Container>
+      <EraserButton onClick={deleteSelectedSlot} title="Erase" />
       <Timer />
-    </Div>
+      <DraftButton title="Draft" onClick={() => setIsOn(!isOn)} isOn={isOn} />
+    </Container>
   );
 };
