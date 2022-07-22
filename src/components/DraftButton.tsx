@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import { Button } from './Button';
@@ -26,19 +26,16 @@ const Container = styled.div`
   position: relative;
 `;
 
-interface DraftButtonProps {
-  onClick: () => void;
-  title: string;
-  isOn: boolean;
-}
+export const DraftButton: React.FC = () => {
+  const [isOn, setIsOn] = useState(false);
+  const toggle = () => setIsOn(!isOn);
 
-export const DraftButton: React.FC<DraftButtonProps> = ({ onClick, isOn, title }) => {
   return (
     <Container>
-      <Button onClick={onClick} withBorder={isOn}>
+      <Button onClick={toggle} withBorder={isOn}>
         <PencilIcon />
       </Button>
-      <Title>{title}</Title>
+      <Title>Draft</Title>
       <State isOn={isOn}>{isOn ? 'ON' : 'OFF'}</State>
     </Container>
   );

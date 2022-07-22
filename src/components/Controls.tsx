@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import { useBoard } from '../hooks/useBoard';
 import { DraftButton } from './DraftButton';
 import { EraserButton } from './EraserButton';
 import { Timer } from './Timer';
@@ -14,13 +12,11 @@ const Container = styled.div`
 `;
 
 export const Controls: React.FC = () => {
-  const { deleteSelectedSlot } = useBoard();
-  const [isOn, setIsOn] = useState(false);
   return (
     <Container>
-      <EraserButton onClick={deleteSelectedSlot} title="Erase" />
+      <EraserButton />
       <Timer />
-      <DraftButton title="Draft" onClick={() => setIsOn(!isOn)} isOn={isOn} />
+      <DraftButton />
     </Container>
   );
 };

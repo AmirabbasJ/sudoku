@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { useBoard } from '../hooks/useBoard';
 import { Button } from './Button';
 import { EraserIcon } from './Icons/EraserIcon';
 import { Title } from './Title';
@@ -8,18 +9,14 @@ const Container = styled.div`
   position: relative;
 `;
 
-interface EraserButtonProps {
-  onClick: () => void;
-  title: string;
-}
-
-export const EraserButton: React.FC<EraserButtonProps> = ({ onClick, title }) => {
+export const EraserButton: React.FC = () => {
+  const { deleteSelectedSlot } = useBoard();
   return (
     <Container>
-      <Button onClick={onClick}>
+      <Button onClick={deleteSelectedSlot}>
         <EraserIcon />
       </Button>
-      <Title>{title}</Title>
+      <Title>Erase</Title>
     </Container>
   );
 };
