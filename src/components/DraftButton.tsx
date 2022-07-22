@@ -19,6 +19,7 @@ const State = styled.p<{ isOn: boolean }>`
   right: 0;
   top: 0;
   font-weight: bold;
+  cursor: default;
   transform: translate(0.6rem, -0.3rem);
 `;
 const Container = styled.div`
