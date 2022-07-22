@@ -15,7 +15,6 @@ const Slider = styled.div`
   align-items: center;
   position: relative;
   background-color: #819ef3;
-
   cursor: pointer;
 `;
 
@@ -44,7 +43,6 @@ const Time = styled.p`
   color: white;
   font-size: 1.2em;
   grid-column: 2;
-  user-select: none;
 `;
 
 export const Timer: React.FC = () => {
