@@ -3,6 +3,8 @@ import { createContext, useMemo, useState } from 'react';
 
 import type { Board } from '../domain/Board';
 import type { Id } from '../domain/Id';
+import type { Notes } from '../domain/Note';
+import { emptyNote } from '../domain/Note';
 import { getMutableSlotIds } from '../domain/Slot';
 import { getBoard } from '../getBoard';
 
@@ -20,6 +22,9 @@ interface BoardCtx {
   setCoveredSlotIds: (i: Id[]) => void;
 
   mutableIds: Id[];
+
+  notes: Notes;
+  setNotes: (n: Notes) => void;
 }
 
 export const BoardCtx = createContext<BoardCtx | null>(null) as React.Context<BoardCtx>;
@@ -35,6 +40,8 @@ export const BoardCtxProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const mutableIds = useMemo(() => getMutableSlotIds(board), []);
 
+  const [notes, setNotes] = useState<Notes>(() => mutableIds.reduce((acc, id) => ({ ...acc, [id]: emptyNote }), {}));
+
   const ctx = useMemo(
     (): BoardCtx => ({
       board,
@@ -46,8 +53,10 @@ export const BoardCtxProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       setMistakeIds,
       coveredSlotIds,
       setCoveredSlotIds,
+      notes,
+      setNotes,
     }),
-    [board, selectedId, mutableIds, mistakeIds, coveredSlotIds, setCoveredSlotIds],
+    [board, selectedId, mutableIds, mistakeIds, coveredSlotIds, setCoveredSlotIds, notes, setNotes],
   );
 
   return <BoardCtx.Provider value={ctx}>{children}</BoardCtx.Provider>;

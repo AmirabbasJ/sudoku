@@ -6,6 +6,8 @@ import { keyToDir } from '../domain/Direction';
 import { toId } from '../domain/Id';
 import { getSlot, parseSlot } from '../domain/Slot';
 import { useBoard } from '../hooks/useBoard';
+import { useDraft } from '../hooks/useDraft';
+import { NoteSlot } from './NoteSlot';
 import { Slot } from './Slot';
 
 const Container = styled.div`
@@ -44,16 +46,20 @@ export const Board: React.FC = () => {
     selectSlot,
     selectedId,
     coveredSlotIds,
+    addNote,
+    notes,
+    emptyNotes,
   } = useBoard();
 
+  const { isDraftMode } = useDraft();
   const editSlotOnKeydown = useCallback(
     ({ key }: KeyboardEvent) => {
       const slot = parseSlot(key);
       if (slot == null) return;
       if (slot === '') return deleteSelectedSlot();
-      return editSelectedSlot(slot);
+      return isDraftMode ? addNote(slot) : editSelectedSlot(slot);
     },
-    [editSelectedSlot, deleteSelectedSlot],
+    [isDraftMode, deleteSelectedSlot, addNote, editSelectedSlot],
   );
 
   const moveOnKeydown = useCallback(
@@ -93,8 +99,21 @@ export const Board: React.FC = () => {
                 const isMistake = mistakeIds.includes(id);
                 const isMutable = mutableIds.includes(id);
                 const isCoveredSlot = coveredSlotIds.includes(id);
+                const isNoteSlot = slot === '' && !notes[id]!.every(x => x === '');
                 const hasSameContent = selectedSlot === slot && slot !== '';
-                return (
+                return isNoteSlot ? (
+                  <NoteSlot
+                    id={id}
+                    key={id}
+                    notes={notes[id]!}
+                    isMutable={isMutable}
+                    isSelected={isSelected}
+                    isMistake={isMistake}
+                    isCoveredSlot={isCoveredSlot}
+                    hasSameContent={hasSameContent}
+                    onClick={() => selectSlot(isSelected, id)}
+                  />
+                ) : (
                   <Slot
                     isMutable={isMutable}
                     isSelected={isSelected}

@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Board } from './components/Board';
 import { Controls } from './components/Controls';
 import { BoardCtxProvider } from './context/BoardCtx';
+import { DraftCtxProvider } from './context/DraftContext';
 import { GlobalStyle } from './GlobalStyles';
 
 const Container = styled.main`
@@ -22,12 +23,14 @@ const Container = styled.main`
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BoardCtxProvider>
-      <GlobalStyle />
-      <Container>
-        <Board />
-        <Controls />
-      </Container>
-    </BoardCtxProvider>
+    <DraftCtxProvider>
+      <BoardCtxProvider>
+        <GlobalStyle />
+        <Container>
+          <Board />
+          <Controls />
+        </Container>
+      </BoardCtxProvider>
+    </DraftCtxProvider>
   </React.StrictMode>,
 );

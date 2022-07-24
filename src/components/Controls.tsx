@@ -1,11 +1,10 @@
-import React from 'react';
 import styled from 'styled-components';
 
-import { useBoard } from '../hooks/useBoard';
-import { EraseBtn } from './EraseBtn';
+import { DraftButton } from './DraftButton';
+import { EraserButton } from './EraserButton';
 import { Timer } from './Timer';
 
-const Div = styled.div`
+const Container = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
@@ -13,11 +12,11 @@ const Div = styled.div`
 `;
 
 export const Controls: React.FC = () => {
-  const { deleteSelectedSlot } = useBoard();
   return (
-    <Div>
-      <EraseBtn onClick={deleteSelectedSlot} />
+    <Container>
+      <EraserButton />
       <Timer />
-    </Div>
+      <DraftButton />
+    </Container>
   );
 };

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { formatTime } from '../domain/formatTime';
-import { Pause } from './Pause';
-import { Play } from './Play';
+import { PauseIcon } from './Icons/PauseIcon';
+import { PlayIcon } from './Icons/PlayIcon';
 
 const Slider = styled.div`
   width: 10rem;
@@ -15,7 +15,6 @@ const Slider = styled.div`
   align-items: center;
   position: relative;
   background-color: #819ef3;
-
   cursor: pointer;
 `;
 
@@ -44,7 +43,6 @@ const Time = styled.p`
   color: white;
   font-size: 1.2em;
   grid-column: 2;
-  user-select: none;
 `;
 
 export const Timer: React.FC = () => {
@@ -64,7 +62,7 @@ export const Timer: React.FC = () => {
   return (
     <Slider onClick={toggle}>
       <Button isPaused={isPaused}>
-        <Sign>{isPaused ? <Play /> : <Pause />}</Sign>
+        <Sign>{isPaused ? <PlayIcon /> : <PauseIcon />}</Sign>
       </Button>
       <Time>{time}</Time>
     </Slider>

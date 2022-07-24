@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-interface SlotProps {
+export interface SlotProps {
   isSelected: boolean;
   isMistake: boolean;
   isMutable: boolean;
@@ -18,6 +18,5 @@ export const Slot = styled.div<SlotProps>`
   align-items: center;
   font-size: 2.2em;
   cursor: pointer;
-  user-select: none;
   outline: none;
 `;

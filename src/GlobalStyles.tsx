@@ -12,6 +12,7 @@ export const GlobalStyle = createGlobalStyle`
     font-family: 'Roboto';
     padding:0;
     margin:0;
-    box-sizing:border-box;
+    box-sizing:border-box;  
+    user-select: none;
   }
 `;
