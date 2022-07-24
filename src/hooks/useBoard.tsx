@@ -8,10 +8,8 @@ import type { Id } from '../domain/Id';
 import { addToNote, emptyNote } from '../domain/Note';
 import type { NumericSlot, Slot } from '../domain/Slot';
 import { deleteSlot, editSlot, getCoveredSlotIds, getSlot, isValidSlot } from '../domain/Slot';
-import { useDraft } from './useDraft';
 
 export const useBoard = () => {
-  const { isDraftMode } = useDraft();
   const {
     board,
     setBoard,
