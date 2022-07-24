@@ -6,6 +6,7 @@ import { keyToDir } from '../domain/Direction';
 import { toId } from '../domain/Id';
 import { getSlot, parseSlot } from '../domain/Slot';
 import { useBoard } from '../hooks/useBoard';
+import { NoteSlot } from './NoteSlot';
 import { Slot } from './Slot';
 
 const Container = styled.div`
@@ -94,7 +95,18 @@ export const Board: React.FC = () => {
                 const isMutable = mutableIds.includes(id);
                 const isCoveredSlot = coveredSlotIds.includes(id);
                 const hasSameContent = selectedSlot === slot && slot !== '';
-                return (
+                return id === '0-0-0-0' ? (
+                  <NoteSlot
+                    id={id}
+                    notes={[1, '', 3, '', 5, 6, 7, '', '']}
+                    isMutable={isMutable}
+                    isSelected={isSelected}
+                    isMistake={isMistake}
+                    isCoveredSlot={isCoveredSlot}
+                    hasSameContent={hasSameContent}
+                    onClick={() => selectSlot(isSelected, id)}
+                  />
+                ) : (
                   <Slot
                     isMutable={isMutable}
                     isSelected={isSelected}

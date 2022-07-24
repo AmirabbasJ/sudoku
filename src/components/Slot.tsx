@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-interface SlotProps {
+export interface SlotProps {
   isSelected: boolean;
   isMistake: boolean;
   isMutable: boolean;
