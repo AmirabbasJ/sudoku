@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
+import { useDraft } from '../hooks/useDraft';
 import { Button } from './Button';
 import { PencilIcon } from './Icons/PencilIcon';
 import { Title } from './Title';
@@ -27,16 +28,14 @@ const Container = styled.div`
 `;
 
 export const DraftButton: React.FC = () => {
-  const [isOn, setIsOn] = useState(false);
-  const toggle = () => setIsOn(!isOn);
-
+  const { isDraftMode, toggleDraftMode } = useDraft();
   return (
     <Container>
-      <Button onClick={toggle} withBorder={isOn}>
+      <Button onClick={toggleDraftMode} withBorder={isDraftMode}>
         <PencilIcon />
       </Button>
       <Title>Draft</Title>
-      <State isOn={isOn}>{isOn ? 'ON' : 'OFF'}</State>
+      <State isOn={isDraftMode}>{isDraftMode ? 'ON' : 'OFF'}</State>
     </Container>
   );
 };
