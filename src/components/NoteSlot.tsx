@@ -19,7 +19,7 @@ const Note = styled.p`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #738293;
+  color: #465466;
 `;
 
 interface NoteSlotProps extends SlotProps {

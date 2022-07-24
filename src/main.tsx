@@ -18,7 +18,7 @@ const Container = styled.main`
   grid-template-columns: auto 1fr;
   align-content: center;
   justify-items: center;
-  grid-gap: 1rem;
+  grid-gap: 4rem;
 `;
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

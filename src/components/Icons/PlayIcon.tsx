@@ -10,7 +10,7 @@ export const PlayIcon: React.FC = () => {
       height="1rem"
       viewBox="0 0 330 330"
       xmlSpace="preserve"
-      fill="white"
+      fill="royalblue"
     >
       <path
         id="XMLID_308_"

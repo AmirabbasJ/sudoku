@@ -10,7 +10,7 @@ export const PauseIcon: React.FC = () => {
       height="1rem"
       viewBox="0 0 277.338 277.338"
       xmlSpace="preserve"
-      fill="white"
+      fill="royalblue"
     >
       <g>
         <path

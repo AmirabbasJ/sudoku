@@ -13,12 +13,13 @@ import { Slot } from './Slot';
 const Container = styled.div`
   border-radius: 1rem;
   overflow: hidden;
-  background-color: black;
+  background-color: #9fc9fc;
   display: grid;
   grid-gap: 0.125rem;
   justify-items: center;
   align-items: center;
-  border: 0.125rem solid black;
+  align-self: center;
+  border: 0.125rem solid #9fc9fc;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
 `;
@@ -29,7 +30,7 @@ const Block = styled.div`
   align-items: center;
   grid-gap: 0.0625rem;
   border-left: none;
-  background-color: #c0c0c0;
+  background-color: #d1dae6;
   border-bottom: none;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
@@ -48,7 +49,6 @@ export const Board: React.FC = () => {
     coveredSlotIds,
     addNote,
     notes,
-    emptyNotes,
   } = useBoard();
 
   const { isDraftMode } = useDraft();
