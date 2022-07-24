@@ -15,7 +15,7 @@ const State = styled.p<{ isOn: boolean }>`
   align-items: center;
   height: 2.25rem;
   border-radius: 100rem;
-  background-color: ${({ isOn }) => (isOn ? 'royalblue' : '#adb7c3')};
+  background-color: ${({ isOn, theme }) => (isOn ? theme.primary : theme.draftThumbnail)};
   right: 0;
   top: 0;
   font-weight: bold;

@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import styled from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 
 import { Board } from './components/Board';
 import { Controls } from './components/Controls';
 import { BoardCtxProvider } from './context/BoardCtx';
 import { DraftCtxProvider } from './context/DraftContext';
 import { GlobalStyle } from './GlobalStyles';
+import { theme } from './theme';
 
 const Container = styled.main`
   padding: 2rem 4rem;
@@ -25,11 +26,13 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <DraftCtxProvider>
       <BoardCtxProvider>
-        <GlobalStyle />
-        <Container>
-          <Board />
-          <Controls />
-        </Container>
+        <ThemeProvider theme={theme}>
+          <GlobalStyle />
+          <Container>
+            <Board />
+            <Controls />
+          </Container>
+        </ThemeProvider>
       </BoardCtxProvider>
     </DraftCtxProvider>
   </React.StrictMode>,

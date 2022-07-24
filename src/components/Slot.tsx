@@ -10,9 +10,17 @@ export interface SlotProps {
 export const Slot = styled.div<SlotProps>`
   width: 4rem;
   height: 4rem;
-  background-color: ${({ isSelected, isMistake, isCoveredSlot, hasSameContent }) =>
-    isSelected ? '#b6d8ff' : isMistake ? '#ffdbdb' : hasSameContent ? '#bed1e9' : isCoveredSlot ? '#e5edf7' : 'white'};
-  color: ${({ isMistake, isMutable }) => (isMistake ? 'tomato' : isMutable ? 'royalblue' : 'initial')};
+  background-color: ${({ isSelected, isMistake, isCoveredSlot, hasSameContent, theme }) =>
+    isSelected
+      ? theme.selectedSlot
+      : isMistake
+      ? theme.mistakeBg
+      : hasSameContent
+      ? theme.sameContentSlots
+      : isCoveredSlot
+      ? theme.coveredSlots
+      : 'white'};
+  color: ${({ isMistake, isMutable, theme }) => (isMistake ? theme.mistake : isMutable ? theme.primary : 'initial')};
   display: flex;
   justify-content: center;
   align-items: center;
