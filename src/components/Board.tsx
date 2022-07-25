@@ -22,6 +22,7 @@ const Container = styled.div`
   border: 0.125rem solid ${({ theme }) => theme.boardBorder};
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
+  position: relative;
 `;
 
 const Block = styled.div`
@@ -34,6 +35,13 @@ const Block = styled.div`
   border-bottom: none;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
+`;
+
+const Div = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #0000009b;
 `;
 
 export const Board: React.FC = () => {
@@ -89,6 +97,7 @@ export const Board: React.FC = () => {
 
   return (
     <Container>
+      <Div />
       {board.map((blockRow, blockRowIndex) =>
         blockRow.map((blocks, blockColIndex) => (
           <Block key={blockColIndex + blockRowIndex}>
