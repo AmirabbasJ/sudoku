@@ -120,7 +120,7 @@ export const Board: React.FC = () => {
                     isMistake={isMistake}
                     isCoveredSlot={isCoveredSlot}
                     hasSameContent={hasSameContent}
-                    onClick={() => selectSlot(isSelected, id)}
+                    onClick={() => selectSlot(id)}
                   />
                 ) : (
                   <Slot
@@ -130,7 +130,7 @@ export const Board: React.FC = () => {
                     isCoveredSlot={isCoveredSlot}
                     hasSameContent={hasSameContent}
                     key={id}
-                    onClick={() => selectSlot(isSelected, id)}
+                    onClick={() => selectSlot(id)}
                   >
                     {slot}
                   </Slot>
