@@ -5,7 +5,7 @@ import styled, { ThemeProvider } from 'styled-components';
 import { Board } from './components/Board';
 import { Controls } from './components/Controls';
 import { BoardCtxProvider } from './context/BoardCtx';
-import { DraftCtxProvider } from './context/DraftContext';
+import { DraftCtxProvider } from './context/DraftCtx';
 import { GlobalStyle } from './GlobalStyles';
 import { theme } from './theme';
 
