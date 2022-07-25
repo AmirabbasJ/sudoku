@@ -1,5 +1,6 @@
 export const lightTheme = {
   bg: '#ffffff',
+  themeIcon: '#000000',
   slotBg: '#ffffff',
   timeFontColor: '#ffffff',
   draftStateFontColor: '#ffffff',
@@ -21,6 +22,7 @@ export const lightTheme = {
 
 export const darkTheme: Theme = {
   bg: '#171719',
+  themeIcon: '#ffffff',
   slotBg: '#25242C',
   timeFontColor: '#ffffff',
   draftStateFontColor: '#ffffff',

@@ -1,31 +1,20 @@
-import { useState } from 'react';
+import { useContext } from 'react';
 
-import type { Theme } from '../theme';
-import { darkTheme, lightTheme } from '../theme';
-
-type ThemeType = 'dark' | 'light';
-
-const getPreferTheme = (): ThemeType => {
-  const isLightPreferred = window.matchMedia('(prefers-color-scheme: light)').matches;
-  return isLightPreferred ? 'light' : 'dark';
-};
-
-const getPersistentTheme = () => {
-  const theme = localStorage.getItem('theme');
-  return theme === 'dark' ? 'dark' : theme === 'light' ? 'light' : null;
-};
+import type { ThemeType } from '../context/ThemeCtx';
+import { ThemeCtx } from '../context/ThemeCtx';
 
 const setPersistentTheme = (theme: ThemeType) => {
   localStorage.setItem('theme', theme);
 };
 
 export const useTheme = () => {
-  const [themeColor, setThemeColor] = useState<ThemeType>(() => getPersistentTheme() ?? getPreferTheme());
+  const { theme, setTheme } = useContext(ThemeCtx);
+
   const toggleTheme = () => {
-    const newTheme = themeColor === 'dark' ? 'light' : 'dark';
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
     setPersistentTheme(newTheme);
-    setThemeColor(newTheme);
+    setTheme(newTheme);
   };
-  const theme: Theme = themeColor === 'dark' ? darkTheme : lightTheme;
+
   return { theme, toggleTheme };
 };

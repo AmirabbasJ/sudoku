@@ -2,8 +2,10 @@ import styled, { ThemeProvider } from 'styled-components';
 
 import { Board } from './components/Board';
 import { Controls } from './components/Controls';
+import { ThemeSwitcher } from './components/ThemeSwitcher';
 import { GlobalStyle } from './GlobalStyles';
 import { useTheme } from './hooks/useTheme';
+import { darkTheme, lightTheme } from './theme';
 
 const Container = styled.main`
   background-color: ${({ theme }) => theme.bg};
@@ -17,14 +19,16 @@ const Container = styled.main`
   align-content: center;
   justify-items: center;
   grid-gap: 4rem;
+  position: relative;
 `;
 
 export const App: React.FC = () => {
   const { theme } = useTheme();
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
       <GlobalStyle />
       <Container>
+        <ThemeSwitcher />
         <Board />
         <Controls />
       </Container>

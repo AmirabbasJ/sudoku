@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { createContext, useMemo, useState } from 'react';
 
 import type { Board } from '../domain/Board';
