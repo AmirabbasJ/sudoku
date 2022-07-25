@@ -18,6 +18,7 @@ export const lightTheme = {
   boardBorder: '#9fc9fc',
   draftThumbnail: '#adb7c3',
   noteColor: '#465466',
+  midMistakeCount: '#e1c441',
 };
 
 export const darkTheme: Theme = {
@@ -40,6 +41,7 @@ export const darkTheme: Theme = {
   boardBorder: '#000000',
   draftThumbnail: '#2E2E38',
   noteColor: '#5B6D86',
+  midMistakeCount: '#e1c441',
 };
 
 export type Theme = typeof lightTheme;

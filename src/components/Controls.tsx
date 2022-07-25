@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { DraftButton } from './DraftButton';
 import { EraserButton } from './EraserButton';
 import { Keypad } from './Keypad';
+import { MistakeCounter } from './MistakeCounter';
 import { Timer } from './Timer';
 
 const Container = styled.div`
@@ -22,12 +23,23 @@ const Top = styled.div`
 
 const Bottom = styled.div``;
 
+const MiddleTop = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+`;
+
 export const Controls: React.FC = () => {
   return (
     <Container>
       <Top>
         <EraserButton />
-        <Timer />
+        <MiddleTop>
+          <MistakeCounter />
+          <Timer />
+        </MiddleTop>
         <DraftButton />
       </Top>
       <Bottom>

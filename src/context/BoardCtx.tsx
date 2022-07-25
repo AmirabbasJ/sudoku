@@ -24,6 +24,9 @@ interface BoardCtx {
 
   notes: Notes;
   setNotes: (n: Notes) => void;
+
+  mistakesCount: number;
+  setMistakesCount: (n: number) => void;
 }
 
 export const BoardCtx = createContext<BoardCtx | null>(null) as React.Context<BoardCtx>;
@@ -40,6 +43,7 @@ export const BoardCtxProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const mutableIds = useMemo(() => getMutableSlotIds(board), []);
 
   const [notes, setNotes] = useState<Notes>(() => mutableIds.reduce((acc, id) => ({ ...acc, [id]: emptyNote }), {}));
+  const [mistakesCount, setMistakesCount] = useState<number>(0);
 
   const ctx = useMemo(
     (): BoardCtx => ({
@@ -54,8 +58,21 @@ export const BoardCtxProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       setCoveredSlotIds,
       notes,
       setNotes,
+      mistakesCount,
+      setMistakesCount,
     }),
-    [board, selectedId, mutableIds, mistakeIds, coveredSlotIds, setCoveredSlotIds, notes, setNotes],
+    [
+      board,
+      selectedId,
+      mutableIds,
+      mistakeIds,
+      coveredSlotIds,
+      setCoveredSlotIds,
+      notes,
+      setNotes,
+      mistakesCount,
+      setMistakesCount,
+    ],
   );
 
   return <BoardCtx.Provider value={ctx}>{children}</BoardCtx.Provider>;
