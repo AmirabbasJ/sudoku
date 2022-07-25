@@ -42,7 +42,7 @@ const Overlay = styled.div<{ show: boolean }>`
   position: absolute;
   width: ${({ show }) => (show ? '100%' : '0%')};
   height: ${({ show }) => (show ? '100%' : '0%')};
-  background-color: #0000006f;
+  background-color: ${({ theme }) => theme.overlayColor};
 `;
 
 export const Board: React.FC = () => {
