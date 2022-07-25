@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 
 import { BoardCtx } from '../context/BoardCtx';
 import type { Direction } from '../domain/Direction';
@@ -8,6 +8,7 @@ import type { Id } from '../domain/Id';
 import { addToNote, emptyNote } from '../domain/Note';
 import type { NumericSlot, Slot } from '../domain/Slot';
 import { deleteSlot, editSlot, getCoveredSlotIds, getSlot, isValidSlot } from '../domain/Slot';
+import { useGameState } from './useGameState';
 
 export const useBoard = () => {
   const {
@@ -25,8 +26,9 @@ export const useBoard = () => {
     mistakesCount,
     setMistakesCount,
   } = useContext(BoardCtx);
+  const { isPaused } = useGameState();
 
-  const incMistakesCount = () => setMistakesCount(mistakesCount + 1);
+  const incMistakesCount = useCallback(() => setMistakesCount(mistakesCount + 1), [mistakesCount, setMistakesCount]);
 
   const emptyNotes = () => setNotes(R.assoc(selectedId!, emptyNote, notes));
   const checkMistakes = useCallback(() => {
@@ -46,6 +48,8 @@ export const useBoard = () => {
   useEffect(() => checkCoveredSlots(), [selectedId, checkCoveredSlots]);
 
   const deleteSelectedSlot = () => {
+    console.log(isPaused);
+    if (isPaused) return;
     // if (isDraftMode) return emptyNotes();
     if (selectedId == null) return;
     const isMutableSlot = mutableIds.includes(selectedId);
@@ -56,6 +60,7 @@ export const useBoard = () => {
 
   const editSelectedSlot = useCallback(
     (slot: NumericSlot) => {
+      if (isPaused) return;
       if (selectedId == null) return;
 
       const currSlot = getSlot(board, selectedId);
@@ -76,17 +81,32 @@ export const useBoard = () => {
       }
       return setBoard(newBoard);
     },
-    [board, mistakeIds, mutableIds, selectedId, setBoard, setMistakeIds],
+    [board, incMistakesCount, isPaused, mistakeIds, mistakesCount, mutableIds, selectedId, setBoard, setMistakeIds],
   );
 
   const moveSelectedSlot = useCallback(
-    (dir: Direction) => setSelectedId(selectedId === null ? null : moveInBoard(selectedId, dir)),
-    [selectedId, setSelectedId],
+    (dir: Direction) => {
+      if (isPaused) return;
+      setSelectedId(selectedId === null ? null : moveInBoard(selectedId, dir));
+    },
+    [isPaused, selectedId, setSelectedId],
   );
 
-  const selectSlot = (isSelected: boolean, id: Id) => setSelectedId(isSelected ? null : id);
+  const selectSlot = useCallback(
+    (id: Id | null) => {
+      if (isPaused || id === null) return setSelectedId(null);
+      setSelectedId(id === selectedId ? null : id);
+    },
+    [isPaused, selectedId, setSelectedId],
+  );
+
+  useEffect(() => {
+    console.log(isPaused);
+    if (isPaused) selectSlot(null);
+  }, [isPaused, selectSlot]);
 
   const addNote = (slot: Slot) => {
+    if (isPaused) return;
     if (selectedId == null) return;
     const isCurrentSlotEmpty = getSlot(board, selectedId) === '';
     if (!isCurrentSlotEmpty) return;

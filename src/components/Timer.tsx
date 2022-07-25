@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { formatTime } from '../domain/formatTime';
+import { useGameState } from '../hooks/useGameState';
 import { PauseIcon } from './Icons/PauseIcon';
 import { PlayIcon } from './Icons/PlayIcon';
 
@@ -46,7 +47,7 @@ const Time = styled.p`
 `;
 
 export const Timer: React.FC = () => {
-  const [isPaused, setIsPaused] = useState(false);
+  const { isPaused, toggle } = useGameState();
   const [secondsPassed, setSecondsPassed] = useState(0);
 
   useEffect(() => {
@@ -56,7 +57,6 @@ export const Timer: React.FC = () => {
     return () => clearInterval(id);
   }, [isPaused]);
 
-  const toggle = () => setIsPaused(!isPaused);
   const time = formatTime(secondsPassed);
 
   return (

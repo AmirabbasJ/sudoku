@@ -7,6 +7,7 @@ import { toId } from '../domain/Id';
 import { getSlot, parseSlot } from '../domain/Slot';
 import { useBoard } from '../hooks/useBoard';
 import { useDraft } from '../hooks/useDraft';
+import { useGameState } from '../hooks/useGameState';
 import { NoteSlot } from './NoteSlot';
 import { Slot } from './Slot';
 
@@ -22,6 +23,7 @@ const Container = styled.div`
   border: 0.125rem solid ${({ theme }) => theme.boardBorder};
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
+  position: relative;
 `;
 
 const Block = styled.div`
@@ -34,6 +36,13 @@ const Block = styled.div`
   border-bottom: none;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
+`;
+
+const Overlay = styled.div<{ show: boolean }>`
+  position: absolute;
+  width: ${({ show }) => (show ? '100%' : '0%')};
+  height: ${({ show }) => (show ? '100%' : '0%')};
+  background-color: ${({ theme }) => theme.overlayColor};
 `;
 
 export const Board: React.FC = () => {
@@ -50,6 +59,8 @@ export const Board: React.FC = () => {
     addNote,
     notes,
   } = useBoard();
+
+  const { isPaused } = useGameState();
 
   const { isDraftMode } = useDraft();
   const editSlotOnKeydown = useCallback(
@@ -89,6 +100,7 @@ export const Board: React.FC = () => {
 
   return (
     <Container>
+      <Overlay show={isPaused} />
       {board.map((blockRow, blockRowIndex) =>
         blockRow.map((blocks, blockColIndex) => (
           <Block key={blockColIndex + blockRowIndex}>
@@ -111,7 +123,7 @@ export const Board: React.FC = () => {
                     isMistake={isMistake}
                     isCoveredSlot={isCoveredSlot}
                     hasSameContent={hasSameContent}
-                    onClick={() => selectSlot(isSelected, id)}
+                    onClick={() => selectSlot(id)}
                   />
                 ) : (
                   <Slot
@@ -121,7 +133,7 @@ export const Board: React.FC = () => {
                     isCoveredSlot={isCoveredSlot}
                     hasSameContent={hasSameContent}
                     key={id}
-                    onClick={() => selectSlot(isSelected, id)}
+                    onClick={() => selectSlot(id)}
                   >
                     {slot}
                   </Slot>
