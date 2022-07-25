@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
 import { BoardCtx } from '../context/BoardCtx';
 import type { Direction } from '../domain/Direction';
@@ -22,7 +22,12 @@ export const useBoard = () => {
     setCoveredSlotIds,
     notes,
     setNotes,
+    mistakesCount,
+    setMistakesCount,
   } = useContext(BoardCtx);
+
+  const incMistakesCount = () => setMistakesCount(mistakesCount + 1);
+
   const emptyNotes = () => setNotes(R.assoc(selectedId!, emptyNote, notes));
   const checkMistakes = useCallback(() => {
     const newIds = mistakeIds.filter(id => !isValidSlot(board, id, getSlot(board, id)));
@@ -64,7 +69,11 @@ export const useBoard = () => {
       if (isMistakeSlot) setMistakeIds(mistakeIds.filter(id => id !== selectedId));
 
       const [newBoard, state] = editSlot(board, selectedId, slot);
-      if (state === 'mistake') setMistakeIds(mistakeIds.concat(selectedId));
+      if (state === 'mistake') {
+        setMistakeIds(mistakeIds.concat(selectedId));
+        console.log(mistakesCount);
+        incMistakesCount();
+      }
       return setBoard(newBoard);
     },
     [board, mistakeIds, mutableIds, selectedId, setBoard, setMistakeIds],
@@ -98,5 +107,6 @@ export const useBoard = () => {
     notes,
     addNote,
     emptyNotes,
+    mistakesCount,
   };
 };
