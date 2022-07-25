@@ -92,10 +92,18 @@ export const useBoard = () => {
     [isPaused, selectedId, setSelectedId],
   );
 
-  const selectSlot = (isSelected: boolean, id: Id) => {
-    if (isPaused) return;
-    setSelectedId(isSelected ? null : id);
-  };
+  const selectSlot = useCallback(
+    (id: Id | null) => {
+      if (isPaused || id === null) return setSelectedId(null);
+      setSelectedId(id === selectedId ? null : id);
+    },
+    [isPaused, selectedId, setSelectedId],
+  );
+
+  useEffect(() => {
+    console.log(isPaused);
+    if (isPaused) selectSlot(null);
+  }, [isPaused, selectSlot]);
 
   const addNote = (slot: Slot) => {
     if (isPaused) return;
