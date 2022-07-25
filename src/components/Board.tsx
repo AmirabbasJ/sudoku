@@ -7,6 +7,7 @@ import { toId } from '../domain/Id';
 import { getSlot, parseSlot } from '../domain/Slot';
 import { useBoard } from '../hooks/useBoard';
 import { useDraft } from '../hooks/useDraft';
+import { useGameState } from '../hooks/useGameState';
 import { NoteSlot } from './NoteSlot';
 import { Slot } from './Slot';
 
@@ -37,11 +38,11 @@ const Block = styled.div`
   grid-template-rows: 1fr 1fr 1fr;
 `;
 
-const Div = styled.div`
+const Overlay = styled.div<{ show: boolean }>`
   position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: #0000009b;
+  width: ${({ show }) => (show ? '100%' : '0%')};
+  height: ${({ show }) => (show ? '100%' : '0%')};
+  background-color: #0000006f;
 `;
 
 export const Board: React.FC = () => {
@@ -58,6 +59,8 @@ export const Board: React.FC = () => {
     addNote,
     notes,
   } = useBoard();
+
+  const { isPaused } = useGameState();
 
   const { isDraftMode } = useDraft();
   const editSlotOnKeydown = useCallback(
@@ -97,7 +100,7 @@ export const Board: React.FC = () => {
 
   return (
     <Container>
-      <Div />
+      <Overlay show={isPaused} />
       {board.map((blockRow, blockRowIndex) =>
         blockRow.map((blocks, blockColIndex) => (
           <Block key={blockColIndex + blockRowIndex}>
