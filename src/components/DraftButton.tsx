@@ -8,7 +8,7 @@ import { Title } from './Title';
 const State = styled.p<{ isOn: boolean }>`
   position: absolute;
   width: 3rem;
-  color: white;
+  color: ${({ theme }) => theme.draftStateFontColor};
   font-size: 0.8em;
   display: flex;
   justify-content: center;

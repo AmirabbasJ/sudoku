@@ -40,7 +40,7 @@ const Sign = styled.div`
 
 const Time = styled.p`
   justify-self: center;
-  color: white;
+  color: ${({ theme }) => theme.timeFontColor};
   font-size: 1.2em;
   grid-column: 2;
 `;

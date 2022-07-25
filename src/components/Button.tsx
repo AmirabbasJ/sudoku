@@ -14,7 +14,6 @@ const Btn = styled.button<{ withBorder: boolean }>`
   transition: border 100ms ease-in-out;
   :hover {
     background-color: ${({ theme }) => theme.btnHover};
-    color: white;
   }
 `;
 

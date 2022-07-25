@@ -1,10 +1,15 @@
-export const theme = {
-  primary: 'royalblue',
+export const lightTheme = {
+  bg: '#ffffff',
+  slotBg: '#ffffff',
+  timeFontColor: '#ffffff',
+  draftStateFontColor: '#ffffff',
+  slotFontColor: '#000000',
+  primary: '#4169e1',
   secondary: '#ebeff4',
   btnHover: '#dce3ed',
   btnActive: '#d2dbe6',
   selectedSlot: '#b6d8ff',
-  mistake: 'tomato',
+  mistake: '#ff6347',
   mistakeBg: '#ffdbdb',
   slotsGaps: '#d1dae6',
   coveredSlots: '#e5edf7',
@@ -13,4 +18,26 @@ export const theme = {
   draftThumbnail: '#adb7c3',
   noteColor: '#465466',
 };
-export type Theme = typeof theme;
+
+export const darkTheme: Theme = {
+  bg: '#171719',
+  slotBg: '#25242C',
+  timeFontColor: '#ffffff',
+  draftStateFontColor: '#ffffff',
+  slotFontColor: '#ffffff',
+  primary: '#4169e1',
+  mistake: '#ff6347',
+  secondary: '#25242C',
+  btnHover: '#1C1C22',
+  btnActive: '#121216',
+  selectedSlot: '#132D7C',
+  mistakeBg: '#3D0000',
+  slotsGaps: '#131415',
+  coveredSlots: '#1D1D25',
+  sameContentSlots: '#16151A',
+  boardBorder: '#000000',
+  draftThumbnail: '#2E2E38',
+  noteColor: '#5B6D86',
+};
+
+export type Theme = typeof lightTheme;

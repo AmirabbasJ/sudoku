@@ -19,8 +19,9 @@ export const Slot = styled.div<SlotProps>`
       ? theme.sameContentSlots
       : isCoveredSlot
       ? theme.coveredSlots
-      : 'white'};
-  color: ${({ isMistake, isMutable, theme }) => (isMistake ? theme.mistake : isMutable ? theme.primary : 'initial')};
+      : theme.slotBg};
+  color: ${({ isMistake, isMutable, theme }) =>
+    isMistake ? theme.mistake : isMutable ? theme.primary : theme.slotFontColor};
   display: flex;
   justify-content: center;
   align-items: center;

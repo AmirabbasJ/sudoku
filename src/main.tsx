@@ -7,9 +7,10 @@ import { Controls } from './components/Controls';
 import { BoardCtxProvider } from './context/BoardCtx';
 import { DraftCtxProvider } from './context/DraftCtx';
 import { GlobalStyle } from './GlobalStyles';
-import { theme } from './theme';
+import { darkTheme } from './theme';
 
 const Container = styled.main`
+  background-color: ${({ theme }) => theme.bg};
   padding: 2rem 4rem;
   margin: 0;
   box-sizing: border-box;
@@ -26,7 +27,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <DraftCtxProvider>
       <BoardCtxProvider>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={darkTheme}>
           <GlobalStyle />
           <Container>
             <Board />
