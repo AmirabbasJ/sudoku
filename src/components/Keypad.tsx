@@ -22,10 +22,10 @@ const Pad = styled.button`
   color: ${({ theme }) => theme.primary};
   cursor: pointer;
   :hover {
-    background-color: ${({ theme }) => theme.btnHover}dce3ed;
+    background-color: ${({ theme }) => theme.btnHover};
   }
   :active {
-    background-color: ${({ theme }) => theme.btnActive}d2dbe6;
+    background-color: ${({ theme }) => theme.btnActive};
   }
 `;
 

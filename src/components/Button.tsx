@@ -13,7 +13,7 @@ const Btn = styled.button<{ withBorder: boolean }>`
   border: 0.2rem solid ${({ withBorder, theme }) => (withBorder ? theme.primary : 'transparent')};
   transition: border 100ms ease-in-out;
   :hover {
-    background-color: ${({ theme }) => theme.btnHover}dce3ed;
+    background-color: ${({ theme }) => theme.btnHover};
     color: white;
   }
 `;
