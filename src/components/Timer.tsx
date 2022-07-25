@@ -14,7 +14,7 @@ const Slider = styled.div`
   grid-template-columns: auto auto;
   align-items: center;
   position: relative;
-  background-color: royalblue;
+  background-color: ${({ theme }) => theme.primary};
   cursor: pointer;
 `;
 
@@ -27,11 +27,8 @@ const Button = styled.button<{ isPaused: boolean }>`
   outline: none;
   cursor: pointer;
   border-radius: 20rem;
-  background-color: #ebeff4;
+  background-color: ${({ theme }) => theme.secondary};
 `;
-// background-color: #ebeff4;
-
-// color: royalblue;
 
 const Sign = styled.div`
   width: 100%;
@@ -43,7 +40,7 @@ const Sign = styled.div`
 
 const Time = styled.p`
   justify-self: center;
-  color: white;
+  color: ${({ theme }) => theme.timeFontColor};
   font-size: 1.2em;
   grid-column: 2;
 `;

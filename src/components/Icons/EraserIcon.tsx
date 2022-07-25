@@ -1,15 +1,14 @@
+import styled from 'styled-components';
+
+const Eraser = styled.svg`
+  fill: ${({ theme }) => theme.primary};
+  width: 2rem;
+  height: 2rem;
+  display: block;
+`;
+
 export const EraserIcon: React.FC = () => (
-  <svg
-    version="1.1"
-    x="0px"
-    y="0px"
-    viewBox="0 0 480.001 480.001"
-    width="2rem"
-    height="2rem"
-    fill="royalblue"
-    display="block"
-    xmlSpace="preserve"
-  >
+  <Eraser version="1.1" x="0px" y="0px" viewBox="0 0 480.001 480.001" xmlSpace="preserve">
     <path
       d="M333.142,350.846c0.115-0.115,0.215-0.239,0.323-0.357l129.681-129.706c10.878-10.878,16.864-25.368,16.855-40.8
 			c-0.01-15.409-5.999-29.865-16.854-40.694l-97.844-97.874c-10.853-10.845-25.326-16.817-40.75-16.817
@@ -25,5 +24,5 @@ export const EraserIcon: React.FC = () => (
 			L220.285,435.404z M174.965,178.527L297.953,55.56c7.069-7.069,16.516-10.963,26.6-10.963c10.085,0,19.536,3.895,26.609,10.962
 			l97.85,97.88c7.08,7.063,10.982,16.493,10.989,26.557c0.006,10.085-3.899,19.547-10.998,26.645l-122.95,122.974L174.965,178.527z"
     />
-  </svg>
+  </Eraser>
 );

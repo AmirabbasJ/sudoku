@@ -1,4 +1,7 @@
 {
   "extends": "@fullstacksjs/tsconfig/react",
+  "compilerOptions": {
+    "includes": ["./src/styled-components.d.ts"]
+  },
   "references": [{ "path": "./tsconfig.node.json" }]
 }

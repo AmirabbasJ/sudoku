@@ -18,14 +18,14 @@ const Pad = styled.button`
   padding: 3rem;
   font-size: 2.5em;
   border-radius: 0.5rem;
-  background-color: #ebeff4;
-  color: royalblue;
+  background-color: ${({ theme }) => theme.secondary};
+  color: ${({ theme }) => theme.primary};
   cursor: pointer;
   :hover {
-    background-color: #dce3ed;
+    background-color: ${({ theme }) => theme.btnHover};
   }
   :active {
-    background-color: #d2dbe6;
+    background-color: ${({ theme }) => theme.btnActive};
   }
 `;
 

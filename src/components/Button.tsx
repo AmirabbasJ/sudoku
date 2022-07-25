@@ -6,15 +6,14 @@ const Btn = styled.button<{ withBorder: boolean }>`
   padding: 1.8rem;
   font-size: 1.3em;
   background-color: transparent;
-  background-color: #ebeff4;
+  background-color: ${({ theme }) => theme.secondary};
   border-radius: 100rem;
-  color: royalblue;
+  color: ${({ theme }) => theme.primary};
   cursor: pointer;
-  border: 0.2rem solid ${({ withBorder }) => (withBorder ? 'royalblue' : 'transparent')};
+  border: 0.2rem solid ${({ withBorder, theme }) => (withBorder ? theme.primary : 'transparent')};
   transition: border 100ms ease-in-out;
   :hover {
-    background-color: #dce3ed;
-    color: white;
+    background-color: ${({ theme }) => theme.btnHover};
   }
 `;
 

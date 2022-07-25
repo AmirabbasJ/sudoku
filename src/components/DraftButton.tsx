@@ -8,14 +8,14 @@ import { Title } from './Title';
 const State = styled.p<{ isOn: boolean }>`
   position: absolute;
   width: 3rem;
-  color: white;
+  color: ${({ theme }) => theme.draftStateFontColor};
   font-size: 0.8em;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 2.25rem;
   border-radius: 100rem;
-  background-color: ${({ isOn }) => (isOn ? 'royalblue' : '#adb7c3')};
+  background-color: ${({ isOn, theme }) => (isOn ? theme.primary : theme.draftThumbnail)};
   right: 0;
   top: 0;
   font-weight: bold;

@@ -13,13 +13,13 @@ import { Slot } from './Slot';
 const Container = styled.div`
   border-radius: 1rem;
   overflow: hidden;
-  background-color: #9fc9fc;
+  background-color: ${({ theme }) => theme.boardBorder};
   display: grid;
   grid-gap: 0.125rem;
   justify-items: center;
   align-items: center;
   align-self: center;
-  border: 0.125rem solid #9fc9fc;
+  border: 0.125rem solid ${({ theme }) => theme.boardBorder};
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
 `;
@@ -30,7 +30,7 @@ const Block = styled.div`
   align-items: center;
   grid-gap: 0.0625rem;
   border-left: none;
-  background-color: #d1dae6;
+  background-color: ${({ theme }) => theme.slotsGaps};
   border-bottom: none;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;

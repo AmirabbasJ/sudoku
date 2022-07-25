@@ -1,16 +1,15 @@
+import styled from 'styled-components';
+
+const Pencil = styled.svg`
+  fill: ${({ theme }) => theme.primary};
+  width: 2rem;
+  width: 2rem;
+  overflow: hidden;
+  display: block;
+`;
+
 export const PencilIcon: React.FC = () => (
-  <svg
-    display="block"
-    version="1.1"
-    x="0px"
-    y="0px"
-    xmlSpace="preserve"
-    overflow="hidden"
-    width="2rem"
-    height="2rem"
-    viewBox="0 0 299.983 299.983"
-    fill="royalblue"
-  >
+  <Pencil version="1.1" x="0px" y="0px" xmlSpace="preserve" viewBox="0 0 299.983 299.983">
     <path
       d="M291.628,45.788L254.242,8.362c-5.381-5.394-12.923-8.362-21.211-8.362c-10.906,0-22.124,4.958-30.776,13.603
 			L23.976,191.902c-0.886,0.859-1.5,1.983-1.771,3.199l-22.038,96.81c-0.509,2.208,0.165,4.534,1.771,6.134
@@ -23,5 +22,5 @@ export const PencilIcon: React.FC = () => (
 			l-17.921,17.919l-65.447-65.447l17.916-17.917c6.094-6.094,14.112-9.737,21.43-9.737c3.371,0,8.157,0.787,11.865,4.495
 			l37.386,37.426c3.708,3.695,4.482,8.474,4.482,11.839C286.776,74.297,283.134,82.309,277.053,88.396z"
     />
-  </svg>
+  </Pencil>
 );
