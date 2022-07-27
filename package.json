@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "nx serve",
+    "dev:web": "nx serve web",
+    "dev:api": "nx serve api",
     "build": "nx build",
     "test": "nx test",
     "lint:web":"nx lint web --fix"
