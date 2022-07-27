@@ -9,7 +9,7 @@ export const GlobalStyle = createGlobalStyle`
     font-display: block;
   }
   *{
-    font-family: 'Roboto', Arial, Helvetica, sans-serif;
+    font-family: 'Roboto';
     padding:0;
     margin:0;
     box-sizing:border-box;
