@@ -4,7 +4,7 @@
   "projects": {
     "api": "apps/api",
     "core": "libs/core",
-    "sudoku": "apps/sudoku",
-    "sudoku-e2e": "apps/sudoku-e2e"
+    "web": "apps/web",
+    "web-e2e": "apps/web-e2e"
   }
 }
