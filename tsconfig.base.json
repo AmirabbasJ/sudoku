@@ -1,0 +1,13 @@
+{
+  "extends": "@fullstacksjs/tsconfig",
+  "compilerOptions": {
+    "rootDir": ".",
+    "declaration": true,
+    "importHelpers": true,
+    "baseUrl": ".",
+    "paths": {
+      "@sudoku/core": ["libs/core/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

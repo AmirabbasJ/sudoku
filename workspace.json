@@ -1,0 +1,10 @@
+{
+  "$schema": "./node_modules/nx/schemas/workspace-schema.json",
+  "version": 2,
+  "projects": {
+    "api": "apps/api",
+    "core": "libs/core",
+    "sudoku": "apps/sudoku",
+    "sudoku-e2e": "apps/sudoku-e2e"
+  }
+}
