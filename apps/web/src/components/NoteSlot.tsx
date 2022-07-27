@@ -1,8 +1,7 @@
 /* eslint-disable react/no-array-index-key */
+import type { Id, Note as INote } from '@sudoku/core';
 import styled from 'styled-components';
 
-import type { Id } from '../domain/Id';
-import type { Note as INote } from '../domain/Note';
 import type { SlotProps } from './Slot';
 import { Slot } from './Slot';
 

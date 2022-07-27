@@ -1,10 +1,9 @@
 /* eslint-disable react/no-array-index-key */
+
+import { getSlot, keyToDir, parseSlot, toId } from '@sudoku/core';
 import { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { keyToDir } from '../domain/Direction';
-import { toId } from '../domain/Id';
-import { getSlot, parseSlot } from '../domain/Slot';
 import { useBoard } from '../hooks/useBoard';
 import { useDraft } from '../hooks/useDraft';
 import { useGameState } from '../hooks/useGameState';

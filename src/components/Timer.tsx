@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { formatTime } from '../domain/formatTime';
+import { formatTime } from '@sudoku/core';
 import { useGameState } from '../hooks/useGameState';
 import { PauseIcon } from './Icons/PauseIcon';
 import { PlayIcon } from './Icons/PlayIcon';

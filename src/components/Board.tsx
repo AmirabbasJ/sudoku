@@ -2,9 +2,9 @@
 import { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { keyToDir } from '../domain/Direction';
-import { toId } from '../domain/Id';
-import { getSlot, parseSlot } from '../domain/Slot';
+import { keyToDir } from '@sudoku/core';
+import { toId } from '@sudoku/core';
+import { getSlot, parseSlot } from '@sudoku/core';
 import { useBoard } from '../hooks/useBoard';
 import { useDraft } from '../hooks/useDraft';
 import { useGameState } from '../hooks/useGameState';

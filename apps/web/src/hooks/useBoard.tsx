@@ -1,19 +1,18 @@
+import type { Direction, Id, NumericSlot, Slot } from '@sudoku/core';
+import {
+  addToNote,
+  deleteSlot,
+  editSlot,
+  emptyNote,
+  getCoveredSlotIds,
+  getSlot,
+  isValidSlot,
+  moveInBoard,
+} from '@sudoku/core';
 import * as R from 'ramda';
 import { useCallback, useContext, useEffect } from 'react';
 
 import { BoardCtx } from '../context/BoardCtx';
-import type { Direction } from '../domain/Direction';
-import { moveInBoard } from '../domain/Direction';
-import type { Id } from '../domain/Id';
-import { addToNote, emptyNote } from '../domain/Note';
-import type { NumericSlot, Slot } from '../domain/Slot';
-import {
-  deleteSlot,
-  editSlot,
-  getCoveredSlotIds,
-  getSlot,
-  isValidSlot,
-} from '../domain/Slot';
 import { useGameState } from './useGameState';
 
 export const useBoard = () => {

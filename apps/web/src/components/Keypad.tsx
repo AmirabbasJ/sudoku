@@ -1,7 +1,7 @@
+import type { NumericSlot } from '@sudoku/core';
 import React from 'react';
 import styled from 'styled-components';
 
-import type { NumericSlot } from '../domain/Slot';
 import { useBoard } from '../hooks/useBoard';
 import { useDraft } from '../hooks/useDraft';
 

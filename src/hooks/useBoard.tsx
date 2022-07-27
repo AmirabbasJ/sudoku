@@ -2,12 +2,12 @@ import * as R from 'ramda';
 import { useCallback, useContext, useEffect } from 'react';
 
 import { BoardCtx } from '../context/BoardCtx';
-import type { Direction } from '../domain/Direction';
-import { moveInBoard } from '../domain/Direction';
-import type { Id } from '../domain/Id';
-import { addToNote, emptyNote } from '../domain/Note';
-import type { NumericSlot, Slot } from '../domain/Slot';
-import { deleteSlot, editSlot, getCoveredSlotIds, getSlot, isValidSlot } from '../domain/Slot';
+import type { Direction } from '@sudoku/core';
+import { moveInBoard } from '@sudoku/core';
+import type { Id } from '@sudoku/core';
+import { addToNote, emptyNote } from '@sudoku/core';
+import type { NumericSlot, Slot } from '@sudoku/core';
+import { deleteSlot, editSlot, getCoveredSlotIds, getSlot, isValidSlot } from '@sudoku/core';
 import { useGameState } from './useGameState';
 
 export const useBoard = () => {

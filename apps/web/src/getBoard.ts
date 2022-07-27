@@ -1,4 +1,4 @@
-import type { Board } from './domain/Board';
+import type { Board } from '@sudoku/core';
 
 const sampleBoard: Board = [
   [

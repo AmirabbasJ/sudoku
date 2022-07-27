@@ -3,6 +3,13 @@
   "extends": ["@fullstacksjs"],
   "ignorePatterns": ["**/*"],
   "plugins": ["@nrwl/nx"],
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "project": ["tsconfig.base.json"]
+      }
+    }
+  },
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],

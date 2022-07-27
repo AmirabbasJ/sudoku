@@ -1,10 +1,7 @@
+import type { Board, Id, Notes } from '@sudoku/core';
+import { emptyNote, getMutableSlotIds } from '@sudoku/core';
 import { createContext, useMemo, useState } from 'react';
 
-import type { Board } from '../domain/Board';
-import type { Id } from '../domain/Id';
-import type { Notes } from '../domain/Note';
-import { emptyNote } from '../domain/Note';
-import { getMutableSlotIds } from '../domain/Slot';
 import { getBoard } from '../getBoard';
 
 interface BoardCtx {
