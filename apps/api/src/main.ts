@@ -1,15 +1,22 @@
-import express from 'express';
+/**
+ * This is not a production server yet!
+ * This is only a minimal backend to get started.
+ */
 
-const app = express();
+import { Logger } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
 
-const greeting = { message: 'Welcome to api!' };
+import { AppModule } from './app/app.module';
 
-app.get('/api', (req, res) => {
-  res.send(greeting);
-});
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  const globalPrefix = 'api';
+  app.setGlobalPrefix(globalPrefix);
+  const port = 3333;
+  await app.listen(port);
+  Logger.log(
+    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
+  );
+}
 
-const port = 3333;
-const server = app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}/api`);
-});
-server.on('error', console.error);
+bootstrap();
