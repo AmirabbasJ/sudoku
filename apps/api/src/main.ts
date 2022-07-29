@@ -1,22 +1,10 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
+import { getConfig } from './config';
+import { App } from './infra/server/App';
+import { SugokuService } from './SugokuService';
 
-import { Logger } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+const main = async () => {
+  const config = await getConfig();
+  new App(config, new SugokuService()).init().run();
+};
 
-import { AppModule } from './app/app.module';
-
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
-  const port = 3333;
-  await app.listen(port);
-  Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
-  );
-}
-
-bootstrap();
+main();
