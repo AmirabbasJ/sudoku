@@ -1,5 +1,5 @@
+import * as E from 'fp-ts/lib/Either';
 import { pipe } from 'fp-ts/lib/function';
-import * as TE from 'fp-ts/TaskEither';
 
 import type { Config, Env } from '../domain';
 import { throwErr } from '../helpers/throwErr';
@@ -10,8 +10,5 @@ const createConfig = (env: Env): Config => ({
   port: toInt(env.PORT ?? '3000'),
 });
 
-export const getConfig = pipe(
-  getEnv('.env.dev.local'),
-  TE.bimap(throwErr, createConfig),
-  TE.toUnion,
-);
+export const getConfig = () =>
+  pipe(getEnv(), E.bimap(throwErr, createConfig), E.toUnion);

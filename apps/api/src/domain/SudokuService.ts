@@ -4,4 +4,5 @@ import type { InternalError } from '../errors';
 
 export interface SudokuService {
   createSudoku: (diff: Difficulty) => Promise<Board | InternalError>;
+  solveSudoku: (board: Board) => Promise<Board | InternalError>;
 }

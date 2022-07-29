@@ -1,5 +1,5 @@
 import type { Static } from 'runtypes';
-import { Literal, Tuple, Union } from 'runtypes';
+import { Literal, Record, Tuple, Union } from 'runtypes';
 
 const Slot = Union(
   Literal(0),
@@ -14,7 +14,7 @@ const Slot = Union(
   Literal(9),
 );
 
-export const BoardDto = Tuple(
+export const Sugoku = Tuple(
   Tuple(Slot, Slot, Slot, Slot, Slot, Slot, Slot, Slot, Slot),
   Tuple(Slot, Slot, Slot, Slot, Slot, Slot, Slot, Slot, Slot),
   Tuple(Slot, Slot, Slot, Slot, Slot, Slot, Slot, Slot, Slot),
@@ -26,4 +26,8 @@ export const BoardDto = Tuple(
   Tuple(Slot, Slot, Slot, Slot, Slot, Slot, Slot, Slot, Slot),
 );
 
-export type BoardDto = Static<typeof BoardDto>;
+export const SugokuDto = Record({
+  board: Sugoku,
+});
+
+export type SugokuDto = Static<typeof SugokuDto>;
