@@ -47,7 +47,7 @@ const Time = styled.p`
 `;
 
 export const Timer: React.FC = () => {
-  const { isPaused, toggle } = useGameState();
+  const { isPaused, togglePause } = useGameState();
   const [secondsPassed, setSecondsPassed] = useState(0);
 
   useEffect(() => {
@@ -60,7 +60,7 @@ export const Timer: React.FC = () => {
   const time = formatTime(secondsPassed);
 
   return (
-    <Slider onClick={toggle}>
+    <Slider onClick={togglePause}>
       <Button isPaused={isPaused}>
         <Sign>{isPaused ? <PlayIcon /> : <PauseIcon />}</Sign>
       </Button>

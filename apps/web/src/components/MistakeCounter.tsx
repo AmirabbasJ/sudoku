@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { useBoard } from '../hooks/useBoard';
+import { useSudoku } from '../hooks/useSudoku';
 
 const Container = styled.div`
   color: ${({ theme }) => theme.primary};
@@ -21,7 +21,7 @@ const Count = styled.span<{ count: number }>`
 const Mistakes = styled.p``;
 
 export const MistakeCounter: React.FC = () => {
-  const { mistakesCount } = useBoard();
+  const { mistakesCount } = useSudoku();
 
   return (
     <Container>

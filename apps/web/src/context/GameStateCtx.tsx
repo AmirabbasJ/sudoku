@@ -1,8 +1,10 @@
 import { createContext, useMemo, useState } from 'react';
 
+export type GameState = 'loading' | 'paused' | 'playing' | 'won';
+
 interface GameStateCtx {
-  isPaused: boolean;
-  setIsPaused: (b: boolean) => void;
+  gameState: GameState;
+  setGameState: (b: GameState) => void;
 }
 
 export const GameStateCtx = createContext<GameStateCtx | null>(
@@ -12,14 +14,14 @@ export const GameStateCtx = createContext<GameStateCtx | null>(
 export const GameStateCtxProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [isPaused, setIsPaused] = useState(false);
+  const [gameState, setGameState] = useState<GameState>('loading');
 
   const ctx = useMemo(
     (): GameStateCtx => ({
-      isPaused,
-      setIsPaused,
+      gameState,
+      setGameState,
     }),
-    [isPaused, setIsPaused],
+    [gameState, setGameState],
   );
 
   return <GameStateCtx.Provider value={ctx}>{children}</GameStateCtx.Provider>;

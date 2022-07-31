@@ -1,5 +1,58 @@
 import type { Board } from '@sudoku/core';
 
+const emptyBoard: Board = [
+  [
+    [
+      ['', '', ''],
+      ['', '', ''],
+      ['', '', ''],
+    ],
+    [
+      ['', '', ''],
+      ['', '', ''],
+      ['', '', ''],
+    ],
+    [
+      ['', '', ''],
+      ['', '', ''],
+      ['', '', ''],
+    ],
+  ],
+  [
+    [
+      ['', '', ''],
+      ['', '', ''],
+      ['', '', ''],
+    ],
+    [
+      ['', '', ''],
+      ['', '', ''],
+      ['', '', ''],
+    ],
+    [
+      ['', '', ''],
+      ['', '', ''],
+      ['', '', ''],
+    ],
+  ],
+  [
+    [
+      ['', '', ''],
+      ['', '', ''],
+      ['', '', ''],
+    ],
+    [
+      ['', '', ''],
+      ['', '', ''],
+      ['', '', ''],
+    ],
+    [
+      ['', '', ''],
+      ['', '', ''],
+      ['', '', ''],
+    ],
+  ],
+];
 const sampleBoard: Board = [
   [
     [
@@ -54,8 +107,13 @@ const sampleBoard: Board = [
   ],
 ];
 
-export const getBoard: () => Board = () => sampleBoard;
-
+export const getLoadingBoard: () => Board = () => emptyBoard;
+export const getBoard = async () => {
+  await new Promise((resolve, reject) => {
+    setTimeout(resolve, 200);
+  });
+  return sampleBoard;
+};
 const solvedSampleBoard: Board = [
   [
     [

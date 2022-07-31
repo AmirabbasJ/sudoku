@@ -1,25 +1,35 @@
-import type { Direction, Id, NumericSlot, Slot } from '@sudoku/core';
+/* eslint-disable max-lines-per-function */
+import type { Board, Direction, Id, NumericSlot, Slot } from '@sudoku/core';
 import {
   addToNote,
   deleteSlot,
   editSlot,
   emptyNote,
   getCoveredSlotIds,
+  getMutableSlotIds,
   getSlot,
   isValidSlot,
   moveInBoard,
 } from '@sudoku/core';
+import { useQuery } from '@tanstack/react-query';
 import * as R from 'ramda';
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { useDidUpdate } from 'rooks';
 
 import { BoardCtx } from '../context/BoardCtx';
+import { getBoard } from '../getLoadingBoard';
+import { fetchSudoku } from '../helpers/fetchSudoku';
 import { useGameState } from './useGameState';
+import { usePersistentSudoku } from './usePersistentSudoku';
 
-export const useBoard = () => {
+// TODO separate some parts to make it a smaller hook
+
+export const useSudoku = () => {
   const {
     board,
     setBoard,
     mutableIds,
+    setMutableIds,
     selectedId,
     setSelectedId,
     mistakeIds,
@@ -31,7 +41,26 @@ export const useBoard = () => {
     mistakesCount,
     setMistakesCount,
   } = useContext(BoardCtx);
-  const { isPaused } = useGameState();
+
+  const { isPaused, setGameState } = useGameState();
+  const { persistentSudokuExists } = usePersistentSudoku();
+
+  const { data, isLoading, isSuccess } = useQuery<Board>(['board'], getBoard, {
+    enabled: !persistentSudokuExists(),
+  });
+
+  useEffect(() => {
+    if (isSuccess) {
+      setBoard(data);
+      setMutableIds(getMutableSlotIds(data));
+    }
+  }, [isSuccess, data, setBoard, setMutableIds]);
+
+  useEffect(() => {
+    setGameState(
+      !persistentSudokuExists() && isLoading ? 'loading' : 'playing',
+    );
+  }, [isLoading, persistentSudokuExists, setGameState]);
 
   const incMistakesCount = useCallback(
     () => setMistakesCount(mistakesCount + 1),
@@ -39,13 +68,13 @@ export const useBoard = () => {
   );
 
   const emptyNotes = () => setNotes(R.assoc(selectedId!, emptyNote, notes));
+
   const checkMistakes = useCallback(() => {
     const newIds = mistakeIds.filter(
       id => !isValidSlot(board, id, getSlot(board, id)),
     );
     setMistakeIds(newIds);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [board]);
+  }, [board, mistakeIds, setMistakeIds]);
 
   const checkCoveredSlots = useCallback(() => {
     if (selectedId == null) return setCoveredSlotIds([]);
@@ -54,13 +83,14 @@ export const useBoard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId]);
 
-  useEffect(() => checkMistakes(), [board, checkMistakes]);
+  useDidUpdate(() => {
+    checkMistakes();
+  }, [board]);
+
   useEffect(() => checkCoveredSlots(), [selectedId, checkCoveredSlots]);
 
   const deleteSelectedSlot = () => {
-    console.log(isPaused);
     if (isPaused) return;
-    // if (isDraftMode) return emptyNotes();
     if (selectedId == null) return;
     const isMutableSlot = mutableIds.includes(selectedId);
     if (!isMutableSlot) return;
@@ -87,7 +117,6 @@ export const useBoard = () => {
       const [newBoard, state] = editSlot(board, selectedId, slot);
       if (state === 'mistake') {
         setMistakeIds(mistakeIds.concat(selectedId));
-        console.log(mistakesCount);
         incMistakesCount();
       }
       return setBoard(newBoard);
@@ -97,7 +126,6 @@ export const useBoard = () => {
       incMistakesCount,
       isPaused,
       mistakeIds,
-      mistakesCount,
       mutableIds,
       selectedId,
       setBoard,
@@ -122,7 +150,6 @@ export const useBoard = () => {
   );
 
   useEffect(() => {
-    console.log(isPaused);
     if (isPaused) selectSlot(null);
   }, [isPaused, selectSlot]);
 

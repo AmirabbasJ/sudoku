@@ -4,10 +4,11 @@ import { getSlot, keyToDir, parseSlot, toId } from '@sudoku/core';
 import { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { useBoard } from '../hooks/useBoard';
 import { useDraft } from '../hooks/useDraft';
 import { useGameState } from '../hooks/useGameState';
+import { useSudoku } from '../hooks/useSudoku';
 import { NoteSlot } from './NoteSlot';
+import { Overlay } from './Overlay';
 import { Slot } from './Slot';
 
 const Container = styled.div`
@@ -37,13 +38,6 @@ const Block = styled.div`
   grid-template-rows: 1fr 1fr 1fr;
 `;
 
-const Overlay = styled.div<{ show: boolean }>`
-  position: absolute;
-  width: ${({ show }) => (show ? '100%' : '0%')};
-  height: ${({ show }) => (show ? '100%' : '0%')};
-  background-color: ${({ theme }) => theme.overlayColor};
-`;
-
 export const Board: React.FC = () => {
   const {
     board,
@@ -57,9 +51,9 @@ export const Board: React.FC = () => {
     coveredSlotIds,
     addNote,
     notes,
-  } = useBoard();
+  } = useSudoku();
 
-  const { isPaused } = useGameState();
+  const { gameState } = useGameState();
 
   const { isDraftMode } = useDraft();
   const editSlotOnKeydown = useCallback(
@@ -99,7 +93,7 @@ export const Board: React.FC = () => {
 
   return (
     <Container>
-      <Overlay show={isPaused} />
+      <Overlay state={gameState} />
       {board.map((blockRow, blockRowIndex) =>
         blockRow.map((blocks, blockColIndex) => (
           <Block key={blockColIndex + blockRowIndex}>

@@ -2,7 +2,7 @@ import type { NumericSlot } from '@sudoku/core';
 import React from 'react';
 import styled from 'styled-components';
 
-import { useBoard } from '../hooks/useBoard';
+import { useSudoku } from '../hooks/useSudoku';
 import { useDraft } from '../hooks/useDraft';
 
 const Container = styled.div`
@@ -32,7 +32,7 @@ const Pad = styled.button`
 const pads = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
 
 export const Keypad: React.FC = () => {
-  const { editSelectedSlot, addNote } = useBoard();
+  const { editSelectedSlot, addNote } = useSudoku();
 
   const { isDraftMode } = useDraft();
   const editSlotOnKeypadClick = (v: NumericSlot) => {
