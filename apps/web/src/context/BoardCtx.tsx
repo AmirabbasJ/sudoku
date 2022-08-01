@@ -1,32 +1,34 @@
 import type { Board, Id, Notes } from '@sudoku/core';
 import { emptyNote, getMutableSlotIds } from '@sudoku/core';
 import { useLocalStorageState } from 'ahooks';
+import type { Dispatch, SetStateAction } from 'react';
 import { createContext, useState } from 'react';
 
 import { getLoadingBoard } from '../getLoadingBoard';
 import { isLoadingBoard } from '../helpers/isLoadingBoard';
 
+type Setter<T> = (value: T | ((x: T) => T)) => void;
 interface BoardCtx {
   board: Board;
-  setBoard: (b: Board) => void;
+  setBoard: Setter<Board>;
 
   selectedId: Id | null;
-  setSelectedId: (i: Id | null) => void;
+  setSelectedId: Setter<Id | null>;
 
   mistakeIds: Id[];
-  setMistakeIds: (i: Id[]) => void;
+  setMistakeIds: Setter<Id[]>;
 
   coveredSlotIds: Id[];
-  setCoveredSlotIds: (i: Id[]) => void;
+  setCoveredSlotIds: Setter<Id[]>;
 
   mutableIds: Id[];
-  setMutableIds: (m: Id[]) => void;
+  setMutableIds: Setter<Id[]>;
 
   notes: Notes;
-  setNotes: (n: Notes) => void;
+  setNotes: Setter<Notes>;
 
   mistakesCount: number;
-  setMistakesCount: (n: number) => void;
+  setMistakesCount: Setter<number>;
 
   isPersisted: boolean;
 }
@@ -61,17 +63,17 @@ export const BoardCtxProvider: React.FC<{ children: React.ReactNode }> = ({
   const ctx: BoardCtx = {
     isPersisted,
     board,
-    setBoard,
+    setBoard: setBoard as Setter<Board>,
     selectedId,
     setSelectedId,
     mutableIds,
-    setMutableIds,
+    setMutableIds: setMutableIds as Setter<Id[]>,
     mistakeIds,
-    setMistakeIds,
+    setMistakeIds: setMistakeIds as Setter<Id[]>,
     coveredSlotIds,
     setCoveredSlotIds,
     notes,
-    setNotes,
+    setNotes: setNotes as Setter<Notes>,
     mistakesCount,
     setMistakesCount,
   };

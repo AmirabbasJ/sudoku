@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { useMistakeCount } from '../hooks/useMistakeCount';
 import { useSudoku } from '../hooks/useSudoku';
 
 const Container = styled.div`
@@ -21,7 +22,7 @@ const Count = styled.span<{ count: number }>`
 const Mistakes = styled.p``;
 
 export const MistakeCounter: React.FC = () => {
-  const { mistakesCount } = useSudoku();
+  const { mistakesCount } = useMistakeCount();
 
   return (
     <Container>

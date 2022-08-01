@@ -20,6 +20,7 @@ import { BoardCtx } from '../context/BoardCtx';
 import { getBoard } from '../getLoadingBoard';
 // import { fetchSudoku } from '../helpers/fetchSudoku';
 import { useGameState } from './useGameState';
+import { useMistakeCount } from './useMistakeCount';
 
 export const useSudoku = () => {
   const {
@@ -35,11 +36,10 @@ export const useSudoku = () => {
     setCoveredSlotIds,
     notes,
     setNotes,
-    mistakesCount,
-    setMistakesCount,
     isPersisted,
   } = useContext(BoardCtx);
 
+  const { incMistakesCount } = useMistakeCount();
   const { isPaused, isPlaying, setGameState } = useGameState();
 
   const { data, isLoading, isSuccess, isError } = useQuery<Board>(
@@ -49,10 +49,6 @@ export const useSudoku = () => {
       enabled: !isPersisted,
     },
   );
-
-  useEffect(() => {
-    console.log('here');
-  }, [board]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -72,11 +68,6 @@ export const useSudoku = () => {
         : 'playing',
     );
   }, [isLoading, isPersisted, setGameState, isError, isPaused]);
-
-  const incMistakesCount = useCallback(
-    () => setMistakesCount(mistakesCount + 1),
-    [mistakesCount, setMistakesCount],
-  );
 
   const emptyNotes = () => {
     if (selectedId != null) setNotes(R.assoc(selectedId, emptyNote, notes));
@@ -185,6 +176,5 @@ export const useSudoku = () => {
     notes,
     addNote,
     emptyNotes,
-    mistakesCount,
   };
 };
