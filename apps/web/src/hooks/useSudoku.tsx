@@ -12,17 +12,14 @@ import {
   moveInBoard,
 } from '@sudoku/core';
 import { useQuery } from '@tanstack/react-query';
+import { useUpdateEffect } from 'ahooks';
 import * as R from 'ramda';
-import { useCallback, useContext, useEffect, useState } from 'react';
-import { useDidUpdate } from 'rooks';
+import { useCallback, useContext, useEffect } from 'react';
 
 import { BoardCtx } from '../context/BoardCtx';
 import { getBoard } from '../getLoadingBoard';
-import { fetchSudoku } from '../helpers/fetchSudoku';
+// import { fetchSudoku } from '../helpers/fetchSudoku';
 import { useGameState } from './useGameState';
-import { usePersistentSudoku } from './usePersistentSudoku';
-
-// TODO separate some parts to make it a smaller hook
 
 export const useSudoku = () => {
   const {
@@ -40,14 +37,22 @@ export const useSudoku = () => {
     setNotes,
     mistakesCount,
     setMistakesCount,
+    isPersisted,
   } = useContext(BoardCtx);
 
-  const { isPaused, setGameState } = useGameState();
-  const { persistentSudokuExists } = usePersistentSudoku();
+  const { isPaused, isPlaying, setGameState } = useGameState();
 
-  const { data, isLoading, isSuccess } = useQuery<Board>(['board'], getBoard, {
-    enabled: !persistentSudokuExists(),
-  });
+  const { data, isLoading, isSuccess, isError } = useQuery<Board>(
+    ['board'],
+    () => getBoard(),
+    {
+      enabled: !isPersisted,
+    },
+  );
+
+  useEffect(() => {
+    console.log('here');
+  }, [board]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -58,16 +63,24 @@ export const useSudoku = () => {
 
   useEffect(() => {
     setGameState(
-      !persistentSudokuExists() && isLoading ? 'loading' : 'playing',
+      !isPersisted && isLoading
+        ? 'loading'
+        : isError
+        ? 'error'
+        : isPaused
+        ? 'paused'
+        : 'playing',
     );
-  }, [isLoading, persistentSudokuExists, setGameState]);
+  }, [isLoading, isPersisted, setGameState, isError, isPaused]);
 
   const incMistakesCount = useCallback(
     () => setMistakesCount(mistakesCount + 1),
     [mistakesCount, setMistakesCount],
   );
 
-  const emptyNotes = () => setNotes(R.assoc(selectedId!, emptyNote, notes));
+  const emptyNotes = () => {
+    if (selectedId != null) setNotes(R.assoc(selectedId, emptyNote, notes));
+  };
 
   const checkMistakes = useCallback(() => {
     const newIds = mistakeIds.filter(
@@ -83,14 +96,14 @@ export const useSudoku = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId]);
 
-  useDidUpdate(() => {
+  useUpdateEffect(() => {
     checkMistakes();
   }, [board]);
 
   useEffect(() => checkCoveredSlots(), [selectedId, checkCoveredSlots]);
 
   const deleteSelectedSlot = () => {
-    if (isPaused) return;
+    if (!isPlaying) return;
     if (selectedId == null) return;
     const isMutableSlot = mutableIds.includes(selectedId);
     if (!isMutableSlot) return;
@@ -100,20 +113,17 @@ export const useSudoku = () => {
 
   const editSelectedSlot = useCallback(
     (slot: NumericSlot) => {
-      if (isPaused) return;
+      if (!isPlaying) return;
       if (selectedId == null) return;
-
       const currSlot = getSlot(board, selectedId);
       const slotIsTheSameAsBefore = slot === currSlot;
       const isEmptySlot = currSlot === '';
       const isMistakeSlot = mistakeIds.includes(selectedId);
       const isMutableSlot = isEmptySlot || mutableIds.includes(selectedId);
-
       if (slotIsTheSameAsBefore) return;
       if (!isMutableSlot) return;
       if (isMistakeSlot)
         setMistakeIds(mistakeIds.filter(id => id !== selectedId));
-
       const [newBoard, state] = editSlot(board, selectedId, slot);
       if (state === 'mistake') {
         setMistakeIds(mistakeIds.concat(selectedId));
@@ -124,7 +134,7 @@ export const useSudoku = () => {
     [
       board,
       incMistakesCount,
-      isPaused,
+      isPlaying,
       mistakeIds,
       mutableIds,
       selectedId,
@@ -135,26 +145,26 @@ export const useSudoku = () => {
 
   const moveSelectedSlot = useCallback(
     (dir: Direction) => {
-      if (isPaused) return;
+      if (!isPlaying) return;
       setSelectedId(selectedId === null ? null : moveInBoard(selectedId, dir));
     },
-    [isPaused, selectedId, setSelectedId],
+    [isPlaying, selectedId, setSelectedId],
   );
 
   const selectSlot = useCallback(
     (id: Id | null) => {
-      if (isPaused || id === null) return setSelectedId(null);
+      if (!isPlaying || id === null) return setSelectedId(null);
       setSelectedId(id === selectedId ? null : id);
     },
-    [isPaused, selectedId, setSelectedId],
+    [isPlaying, selectedId, setSelectedId],
   );
 
   useEffect(() => {
-    if (isPaused) selectSlot(null);
-  }, [isPaused, selectSlot]);
+    if (!isPlaying) selectSlot(null);
+  }, [isPlaying, selectSlot]);
 
   const addNote = (slot: Slot) => {
-    if (isPaused) return;
+    if (!isPlaying) return;
     if (selectedId == null) return;
     const isCurrentSlotEmpty = getSlot(board, selectedId) === '';
     if (!isCurrentSlotEmpty) return;

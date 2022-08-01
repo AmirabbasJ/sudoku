@@ -1,6 +1,6 @@
 import { createContext, useMemo, useState } from 'react';
 
-export type GameState = 'loading' | 'paused' | 'playing' | 'won';
+export type GameState = 'error' | 'loading' | 'paused' | 'playing' | 'won';
 
 interface GameStateCtx {
   gameState: GameState;

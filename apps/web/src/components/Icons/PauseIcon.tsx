@@ -1,18 +1,23 @@
 import styled from 'styled-components';
 
-const Pause = styled.svg`
+interface PauseIconProps {
+  size?: number;
+}
+
+const Pause = styled.svg<Required<PauseIconProps>>`
   fill: ${({ theme }) => theme.primary};
-  width: 1rem;
-  width: 1rem;
+  width: ${({ size }) => `${size}rem`};
+  width: ${({ size }) => `${size}rem`};
 `;
 
-export const PauseIcon: React.FC = () => {
+export const PauseIcon: React.FC<PauseIconProps> = ({ size = 1 }) => {
   return (
     <Pause
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
+      size={size}
       viewBox="0 0 277.338 277.338"
       xmlSpace="preserve"
     >

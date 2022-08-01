@@ -19,7 +19,7 @@ export const lightTheme = {
   draftThumbnail: '#adb7c3',
   noteColor: '#465466',
   midMistakeCount: '#e1c441',
-  overlayColor: '#0000006f',
+  overlayColor: '#ffffff',
 };
 
 export const darkTheme: Theme = {
@@ -43,7 +43,7 @@ export const darkTheme: Theme = {
   draftThumbnail: '#2E2E38',
   noteColor: '#5B6D86',
   midMistakeCount: '#e1c441',
-  overlayColor: '#0000006f',
+  overlayColor: '#171719',
 };
 
 export type Theme = typeof lightTheme;

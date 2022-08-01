@@ -1,18 +1,18 @@
 import styled from 'styled-components';
 
 import type { GameState } from '../context/GameStateCtx';
+import { PauseIcon } from './Icons/PauseIcon';
 import { Title } from './Title';
 
-export const SOverlay = styled.div<{ show: boolean; hideAll?: boolean }>`
+export const StyledOverlay = styled.div`
   position: absolute;
-  width: ${({ show }) => (show ? '100%' : '0%')};
-  height: ${({ show }) => (show ? '100%' : '0%')};
-  background-color: ${({ hideAll, theme }) =>
-    hideAll ? theme.bg : theme.overlayColor};
+  width: 100%;
+  height: 100%;
+  background-color: ${({ theme }) => theme.overlayColor};
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 5em;
+  flex-direction: column;
 `;
 
 const Spinner = styled.div`
@@ -41,23 +41,44 @@ const Spinner = styled.div`
   }
 `;
 
+const Won = styled(Title)`
+  font-size: 5em;
+`;
+
+const Error = styled(Title)`
+  font-size: 2.5em;
+  color: ${({ theme }) => theme.mistake};
+`;
+
 interface OverlayProps {
   state: GameState;
 }
 
 export const Overlay: React.FC<OverlayProps> = ({ state }) => {
-  if (state === 'paused') return <SOverlay show={true} />;
+  if (state === 'paused')
+    return (
+      <StyledOverlay>
+        <PauseIcon size={5} />
+      </StyledOverlay>
+    );
   if (state === 'loading')
     return (
-      <SOverlay show={true} hideAll={true}>
+      <StyledOverlay>
         <Spinner />
-      </SOverlay>
+      </StyledOverlay>
     );
   if (state === 'won')
     return (
-      <SOverlay show={true} hideAll={true}>
-        <Title>You Won!</Title>
-      </SOverlay>
+      <StyledOverlay>
+        <Won>You Won!</Won>
+      </StyledOverlay>
+    );
+  if (state === 'error')
+    return (
+      <StyledOverlay>
+        <Error>error occurred while loading sudoku!!</Error>
+        <Error>please try again later</Error>
+      </StyledOverlay>
     );
   return null;
 };

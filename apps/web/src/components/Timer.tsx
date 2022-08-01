@@ -1,5 +1,6 @@
 import { formatTime } from '@sudoku/core';
-import React, { useEffect, useState } from 'react';
+import { useLocalStorageState } from 'ahooks';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useGameState } from '../hooks/useGameState';
@@ -19,9 +20,9 @@ const Slider = styled.div`
   cursor: pointer;
 `;
 
-const Button = styled.button<{ isPaused: boolean }>`
+const Button = styled.button<{ isPlaying: boolean }>`
   height: 3.5rem;
-  width: ${({ isPaused }) => (isPaused ? '100%' : '3.5rem')};
+  width: ${({ isPlaying }) => (isPlaying ? '3.5rem' : '100%')};
   transition: width 300ms ease-in-out;
   position: absolute;
   border: none;
@@ -47,22 +48,24 @@ const Time = styled.p`
 `;
 
 export const Timer: React.FC = () => {
-  const { isPaused, togglePause } = useGameState();
-  const [secondsPassed, setSecondsPassed] = useState(0);
+  const { isPlaying, togglePause } = useGameState();
+  const [secondsPassed, setSecondsPassed] = useLocalStorageState('timer', {
+    defaultValue: 0,
+  });
 
   useEffect(() => {
     const id = setInterval(() => {
-      if (!isPaused) setSecondsPassed(seconds => seconds + 1);
+      if (isPlaying) setSecondsPassed(seconds => (seconds as number) + 1);
     }, 1000);
     return () => clearInterval(id);
-  }, [isPaused]);
+  }, [isPlaying, setSecondsPassed]);
 
   const time = formatTime(secondsPassed);
 
   return (
     <Slider onClick={togglePause}>
-      <Button isPaused={isPaused}>
-        <Sign>{isPaused ? <PlayIcon /> : <PauseIcon />}</Sign>
+      <Button isPlaying={isPlaying}>
+        <Sign>{isPlaying ? <PauseIcon /> : <PlayIcon />}</Sign>
       </Button>
       <Time>{time}</Time>
     </Slider>

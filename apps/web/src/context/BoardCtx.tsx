@@ -1,8 +1,10 @@
 import type { Board, Id, Notes } from '@sudoku/core';
 import { emptyNote, getMutableSlotIds } from '@sudoku/core';
-import { createContext, useMemo, useState } from 'react';
+import { useLocalStorageState } from 'ahooks';
+import { createContext, useState } from 'react';
 
 import { getLoadingBoard } from '../getLoadingBoard';
+import { isLoadingBoard } from '../helpers/isLoadingBoard';
 
 interface BoardCtx {
   board: Board;
@@ -25,32 +27,39 @@ interface BoardCtx {
 
   mistakesCount: number;
   setMistakesCount: (n: number) => void;
+
+  isPersisted: boolean;
 }
 
 export const BoardCtx = createContext<BoardCtx | null>(
   null,
 ) as React.Context<BoardCtx>;
 
-const initBoard = getLoadingBoard();
-
 export const BoardCtxProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [board, setBoard] = useState<Board>(initBoard);
+  const [board, setBoard] = useLocalStorageState<Board>('board', {
+    defaultValue: () => getLoadingBoard(),
+  });
   const [selectedId, setSelectedId] = useState<Id | null>(null);
-  const [mistakeIds, setMistakeIds] = useState<Id[]>([]);
+  const [mistakeIds, setMistakeIds] = useLocalStorageState<Id[]>('mistakeIds', {
+    defaultValue: [],
+  });
   const [coveredSlotIds, setCoveredSlotIds] = useState<Id[]>([]);
-  const [mutableIds, setMutableIds] = useState<Id[]>(() =>
-    getMutableSlotIds(board),
-  );
+  const [mutableIds, setMutableIds] = useLocalStorageState<Id[]>('mutableIds', {
+    defaultValue: () => getMutableSlotIds(board),
+  });
 
-  const [notes, setNotes] = useState<Notes>(() =>
-    mutableIds.reduce((acc, id) => ({ ...acc, [id]: emptyNote }), {}),
-  );
+  const [notes, setNotes] = useLocalStorageState<Notes>('notes', {
+    defaultValue: () =>
+      mutableIds.reduce((acc, id) => ({ ...acc, [id]: emptyNote }), {}),
+  });
+
   const [mistakesCount, setMistakesCount] = useState<number>(0);
-
+  const isPersisted = !isLoadingBoard(board);
   // eslint-disable-next-line react/jsx-no-constructed-context-values
   const ctx: BoardCtx = {
+    isPersisted,
     board,
     setBoard,
     selectedId,
