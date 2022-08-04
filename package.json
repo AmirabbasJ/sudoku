@@ -27,8 +27,7 @@
     "runtypes": "6.5.1",
     "rxjs": "^7.0.0",
     "styled-components": "5.3.5",
-    "tslib": "^2.3.0",
-    "usehooks-ts": "2.6.0"
+    "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@fullstacksjs/eslint-config": "8.4.3",

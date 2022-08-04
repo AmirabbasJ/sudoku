@@ -7,6 +7,8 @@ import styled from 'styled-components';
 import { useDraft } from '../hooks/useDraft';
 import { useGameState } from '../hooks/useGameState';
 import { useSudoku } from '../hooks/useSudoku';
+import { Block } from './Block';
+import { LoadingBoard } from './LoadingBoard';
 import { NoteSlot } from './NoteSlot';
 import { Overlay } from './Overlay';
 import { Slot } from './Slot';
@@ -26,18 +28,6 @@ const Container = styled.div`
   position: relative;
 `;
 
-const Block = styled.div`
-  display: grid;
-  justify-items: center;
-  align-items: center;
-  grid-gap: 0.0625rem;
-  border-left: none;
-  background-color: ${({ theme }) => theme.slotsGaps};
-  border-bottom: none;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-`;
-
 export const Board: React.FC = () => {
   const {
     board,
@@ -53,7 +43,7 @@ export const Board: React.FC = () => {
     notes,
   } = useSudoku();
 
-  const { gameState } = useGameState();
+  const { gameState, isPlaying } = useGameState();
 
   const { isDraftMode } = useDraft();
   const editSlotOnKeydown = useCallback(
@@ -90,10 +80,17 @@ export const Board: React.FC = () => {
   }, [moveOnKeydown]);
 
   const selectedSlot = selectedId == null ? null : getSlot(board, selectedId);
+  console.log(isPlaying);
+  if (!isPlaying)
+    return (
+      <Container>
+        <Overlay state={gameState} />
+        <LoadingBoard />
+      </Container>
+    );
 
   return (
     <Container>
-      <Overlay state={gameState} />
       {board.map((blockRow, blockRowIndex) =>
         blockRow.map((blocks, blockColIndex) => (
           <Block key={blockColIndex + blockRowIndex}>

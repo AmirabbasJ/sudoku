@@ -7,6 +7,7 @@ import { BoardCtxProvider } from './context/BoardCtx';
 import { DraftCtxProvider } from './context/DraftCtx';
 import { GameStateCtxProvider } from './context/GameStateCtx';
 import { ThemeCtxProvider } from './context/ThemeCtx';
+import { TimerCtxProvider } from './context/TimerCtx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,9 +25,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <ThemeCtxProvider>
         <GameStateCtxProvider>
           <DraftCtxProvider>
-            <BoardCtxProvider>
-              <App />
-            </BoardCtxProvider>
+            <TimerCtxProvider>
+              <BoardCtxProvider>
+                <App />
+              </BoardCtxProvider>
+            </TimerCtxProvider>
           </DraftCtxProvider>
         </GameStateCtxProvider>
       </ThemeCtxProvider>

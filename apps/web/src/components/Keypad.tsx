@@ -2,8 +2,8 @@ import type { NumericSlot } from '@sudoku/core';
 import React from 'react';
 import styled from 'styled-components';
 
-import { useSudoku } from '../hooks/useSudoku';
 import { useDraft } from '../hooks/useDraft';
+import { useSudoku } from '../hooks/useSudoku';
 
 const Container = styled.div`
   display: grid;
@@ -15,7 +15,7 @@ const Container = styled.div`
 const Pad = styled.button`
   outline: none;
   border: none;
-  padding: 3rem;
+  padding: 2rem;
   font-size: 2.5em;
   border-radius: 0.5rem;
   background-color: ${({ theme }) => theme.secondary};

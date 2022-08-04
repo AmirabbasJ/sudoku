@@ -3,7 +3,8 @@ import { useContext } from 'react';
 import { GameStateCtx } from '../context/GameStateCtx';
 
 export const useGameState = () => {
-  const { gameState, setGameState } = useContext(GameStateCtx);
+  const { gameState, setGameState, setDifficulty, difficulty } =
+    useContext(GameStateCtx);
 
   const isPaused = gameState === 'paused';
   const isPlaying = gameState === 'playing';
@@ -14,6 +15,8 @@ export const useGameState = () => {
   };
 
   return {
+    setDifficulty,
+    difficulty,
     gameState,
     isPlaying,
     isPaused,

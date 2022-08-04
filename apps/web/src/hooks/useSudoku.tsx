@@ -1,5 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import type { Board, Direction, Id, NumericSlot, Slot } from '@sudoku/core';
+import type {
+  Board,
+  Difficulty,
+  Direction,
+  Id,
+  NumericSlot,
+  Slot,
+} from '@sudoku/core';
 import {
   addToNote,
   deleteSlot,
@@ -17,7 +24,8 @@ import * as R from 'ramda';
 import { useCallback, useContext, useEffect } from 'react';
 
 import { BoardCtx } from '../context/BoardCtx';
-import { getBoard } from '../getLoadingBoard';
+import { emptyBoard } from '../emptyBoard';
+import { getSampleBoard } from '../getSampleBoard';
 // import { fetchSudoku } from '../helpers/fetchSudoku';
 import { useGameState } from './useGameState';
 import { useMistakeCount } from './useMistakeCount';
@@ -36,30 +44,55 @@ export const useSudoku = () => {
     setCoveredSlotIds,
     notes,
     setNotes,
-    isPersisted,
+    isUsingPersistent,
+    setIsUsingPersistent,
+    reset,
   } = useContext(BoardCtx);
 
   const { incMistakesCount } = useMistakeCount();
-  const { isPaused, isPlaying, setGameState } = useGameState();
+  const { isPaused, isPlaying, setGameState, difficulty, setDifficulty } =
+    useGameState();
 
-  const { data, isLoading, isSuccess, isError } = useQuery<Board>(
-    ['board'],
-    () => getBoard(),
-    {
-      enabled: !isPersisted,
-    },
+  const { data, isLoading, isSuccess, isError, refetch } = useQuery<Board>(
+    ['board', difficulty],
+    () => getSampleBoard(difficulty),
+    { enabled: !isUsingPersistent },
   );
+
+  const newGame = (d: Difficulty) => {
+    setIsUsingPersistent(false);
+    reset();
+    setDifficulty(d);
+    refetch();
+    setGameState('loading');
+  };
 
   useEffect(() => {
     if (isSuccess) {
+      setIsUsingPersistent(true);
+      setGameState('playing');
       setBoard(data);
       setMutableIds(getMutableSlotIds(data));
+      setNotes(
+        getMutableSlotIds(data).reduce(
+          (acc, id) => ({ ...acc, [id]: emptyNote }),
+          {},
+        ),
+      );
     }
-  }, [isSuccess, data, setBoard, setMutableIds]);
+  }, [
+    isSuccess,
+    data,
+    setBoard,
+    setMutableIds,
+    setNotes,
+    setIsUsingPersistent,
+    setGameState,
+  ]);
 
   useEffect(() => {
     setGameState(
-      !isPersisted && isLoading
+      !isUsingPersistent && isLoading
         ? 'loading'
         : isError
         ? 'error'
@@ -67,7 +100,7 @@ export const useSudoku = () => {
         ? 'paused'
         : 'playing',
     );
-  }, [isLoading, isPersisted, setGameState, isError, isPaused]);
+  }, [isLoading, setGameState, isError, isPaused, isUsingPersistent]);
 
   const emptyNotes = () => {
     if (selectedId != null) setNotes(R.assoc(selectedId, emptyNote, notes));
@@ -176,5 +209,6 @@ export const useSudoku = () => {
     notes,
     addNote,
     emptyNotes,
+    newGame,
   };
 };

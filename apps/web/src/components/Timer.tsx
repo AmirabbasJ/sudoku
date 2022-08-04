@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useGameState } from '../hooks/useGameState';
+import { useTimer } from '../hooks/useTimer';
 import { PauseIcon } from './Icons/PauseIcon';
 import { PlayIcon } from './Icons/PlayIcon';
 
@@ -49,18 +50,16 @@ const Time = styled.p`
 
 export const Timer: React.FC = () => {
   const { isPlaying, togglePause } = useGameState();
-  const [secondsPassed, setSecondsPassed] = useLocalStorageState('timer', {
-    defaultValue: 0,
-  });
+  const { timer, setTimer } = useTimer();
 
   useEffect(() => {
     const id = setInterval(() => {
-      if (isPlaying) setSecondsPassed(seconds => (seconds as number) + 1);
+      if (isPlaying) setTimer(seconds => (seconds as number) + 1);
     }, 1000);
     return () => clearInterval(id);
-  }, [isPlaying, setSecondsPassed]);
+  }, [isPlaying, setTimer]);
 
-  const time = formatTime(secondsPassed);
+  const time = formatTime(timer);
 
   return (
     <Slider onClick={togglePause}>

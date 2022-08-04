@@ -4,6 +4,7 @@ import { DraftButton } from './DraftButton';
 import { EraserButton } from './EraserButton';
 import { Keypad } from './Keypad';
 import { MistakeCounter } from './MistakeCounter';
+import { NewGameBtn } from './NewGameBtn';
 import { Timer } from './Timer';
 
 const Container = styled.div`
@@ -15,8 +16,8 @@ const Container = styled.div`
 `;
 
 const Top = styled.div`
+  flex-grow: 1;
   display: flex;
-  align-items: flex-start;
   justify-content: space-evenly;
   align-items: center;
 `;
@@ -37,6 +38,7 @@ export const Controls: React.FC = () => {
       <Top>
         <EraserButton />
         <MiddleTop>
+          <NewGameBtn />
           <MistakeCounter />
           <Timer />
         </MiddleTop>

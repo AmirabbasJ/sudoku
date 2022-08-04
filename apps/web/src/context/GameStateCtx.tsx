@@ -1,3 +1,5 @@
+import type { Difficulty } from '@sudoku/core';
+import { useLocalStorageState } from 'ahooks';
 import { createContext, useMemo, useState } from 'react';
 
 export type GameState = 'error' | 'loading' | 'paused' | 'playing' | 'won';
@@ -5,6 +7,9 @@ export type GameState = 'error' | 'loading' | 'paused' | 'playing' | 'won';
 interface GameStateCtx {
   gameState: GameState;
   setGameState: (b: GameState) => void;
+
+  difficulty: Difficulty;
+  setDifficulty: (d: Difficulty) => void;
 }
 
 export const GameStateCtx = createContext<GameStateCtx | null>(
@@ -15,13 +20,19 @@ export const GameStateCtxProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [gameState, setGameState] = useState<GameState>('loading');
+  const [difficulty, setDifficulty] = useLocalStorageState<Difficulty>(
+    'difficulty',
+    { defaultValue: () => 'easy' },
+  );
 
   const ctx = useMemo(
     (): GameStateCtx => ({
       gameState,
       setGameState,
+      difficulty,
+      setDifficulty,
     }),
-    [gameState, setGameState],
+    [gameState, setGameState, difficulty, setDifficulty],
   );
 
   return <GameStateCtx.Provider value={ctx}>{children}</GameStateCtx.Provider>;

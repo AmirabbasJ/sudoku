@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Btn = styled.button<{ withBorder: boolean }>`
+export const Btn = styled.button<{ withBorder?: boolean }>`
   outline: none;
   padding: 1.8rem;
   font-size: 1.3em;
