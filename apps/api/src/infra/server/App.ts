@@ -1,5 +1,5 @@
 import type { Express } from 'express';
-import express from 'express';
+import express, { json } from 'express';
 
 import type { Config, SudokuService } from '../../domain';
 import { createSudokuRouter } from './createSudokuRouter';
@@ -13,6 +13,7 @@ export class App {
 
   init(): App {
     this.app = express();
+    this.app.use(json());
     this.app.use('/api', createSudokuRouter(this.sudokuService));
     return this;
   }
@@ -22,5 +23,9 @@ export class App {
       console.log(`Listening at http://localhost:${this.config.port}/api`);
     });
     server.on('error', console.error);
+  }
+
+  getExpressInstance() {
+    return this.app;
   }
 }

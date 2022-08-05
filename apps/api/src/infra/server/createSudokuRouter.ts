@@ -1,4 +1,5 @@
-import { Board } from '@sudoku/core';
+import type { SolvedSudokuDto } from '@sudoku/core';
+import { SolveSudokuDto } from '@sudoku/core';
 import express from 'express';
 
 import type { SudokuService } from '../../domain';
@@ -21,18 +22,17 @@ export const createSudokuRouter = (sudokuService: SudokuService) => {
     return res.json({ sudoku: sudokuOrError });
   });
 
-  router.post('sudoku/solve', async (req, res) => {
-    const sudokuValidation = Board.validate(req.body.board);
-    if (!sudokuValidation.success)
-      return res.status(401).json({ msg: BadBoard });
+  router.post('/sudoku/solve', async (req, res) => {
+    const isValidSudoku = SolveSudokuDto.guard(req.body);
+    if (!isValidSudoku) return res.status(400).json({ msg: BadBoard });
 
-    const sudoku = sudokuValidation.value;
-    const solvedSudokuOrError = await sudokuService.solveSudoku(sudoku);
+    const { currentBoard, originalBoard } = req.body;
+    const solvedSudokuOrError = await sudokuService.solveSudoku(originalBoard);
     if (solvedSudokuOrError === InternalError)
       return res.status(500).json({ msg: InternalError });
 
-    const isCorrect = areSameSudoku(sudoku, solvedSudokuOrError);
-    return { isCorrect };
+    const isCorrect = areSameSudoku(currentBoard, solvedSudokuOrError);
+    return res.status(200).json({ isCorrect } as SolvedSudokuDto);
   });
 
   return router;

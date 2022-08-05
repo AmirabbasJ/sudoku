@@ -5,3 +5,5 @@ export * from './formatTime';
 export * from './Id';
 export * from './Note';
 export * from './Slot';
+export * from './SolvedSudokuDto';
+export * from './SolveSudokuDto';
