@@ -1,9 +1,7 @@
-import { setBoard } from '@sudoku/core';
+import { getSampleBoard, getSolvedSamples, setBoard } from '@sudoku/core';
 import request from 'supertest';
 
 import { MockApp } from './AppMock';
-import { getSampleBoard } from './getSampleBoard';
-import { getSolvedSamples } from './getSolvedSamples';
 
 describe('/api/sudoku/solve', () => {
   const app = MockApp.init().getExpressInstance();

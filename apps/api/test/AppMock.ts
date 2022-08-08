@@ -1,11 +1,10 @@
 import type { Board, Difficulty } from '@sudoku/core';
+import { getSampleBoard, getSolvedSamples } from '@sudoku/core';
 import { equals } from 'ramda';
 
 import type { SudokuService } from '../src/domain';
 import { toInt } from '../src/helpers';
 import { App } from '../src/infra/server/App';
-import { getSampleBoard } from './getSampleBoard';
-import { getSolvedSamples } from './getSolvedSamples';
 
 class SudokuServiceMock implements SudokuService {
   createSudoku = (diff: Difficulty): Promise<Board | 'InternalError'> =>

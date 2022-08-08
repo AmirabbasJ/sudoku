@@ -12,6 +12,7 @@ import {
   deleteSlot,
   editSlot,
   emptyNote,
+  getAsyncSampleBoard,
   getCoveredSlotIds,
   getMutableSlotIds,
   getSlot,
@@ -25,7 +26,6 @@ import { useCallback, useContext, useEffect } from 'react';
 
 import { BoardCtx } from '../context/BoardCtx';
 import { emptyBoard } from '../emptyBoard';
-import { getSampleBoard } from '../getSampleBoard';
 // import { fetchSudoku } from '../helpers/fetchSudoku';
 import { useGameState } from './useGameState';
 import { useMistakeCount } from './useMistakeCount';
@@ -55,7 +55,7 @@ export const useSudoku = () => {
 
   const { data, isLoading, isSuccess, isError, refetch } = useQuery<Board>(
     ['board', difficulty],
-    () => getSampleBoard(difficulty),
+    () => getAsyncSampleBoard(difficulty),
     { enabled: !isUsingPersistent },
   );
 
@@ -113,6 +113,12 @@ export const useSudoku = () => {
     setMistakeIds(newIds);
   }, [board, mistakeIds, setMistakeIds]);
 
+  const checkWinState = () => {
+    const isGameFinished = board.flat(3).every(x => x !== '');
+    const isNoMistakes = R.isEmpty(mistakeIds);
+    if (isGameFinished && isNoMistakes) return setGameState('won');
+  };
+
   const checkCoveredSlots = useCallback(() => {
     if (selectedId == null) return setCoveredSlotIds([]);
     const ids = getCoveredSlotIds(board, selectedId);
@@ -122,6 +128,7 @@ export const useSudoku = () => {
 
   useUpdateEffect(() => {
     checkMistakes();
+    checkWinState();
   }, [board]);
 
   useEffect(() => checkCoveredSlots(), [selectedId, checkCoveredSlots]);
