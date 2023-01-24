@@ -1,0 +1,17 @@
+tanstack
+ahooks
+runtypes
+fullstacksjs
+truetype
+juxt
+XMLID
+Capa
+dbaeumer
+typecheck
+Parens
+nrwl
+esbenp
+firsttris
+dbaeumer
+vite
+lintstagedrc

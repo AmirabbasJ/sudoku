@@ -1,0 +1,20 @@
+{
+  "version": "0.2",
+  "dictionaries": ["sudoku"],
+
+  "dictionaryDefinitions": [
+    {
+      "name": "sudoku",
+      "path": "./configs/cspell/sudoku.txt",
+      "addWords": true
+    }
+  ],
+  "ignorePaths": ["node_modules/", "dist/"],
+  "patterns": [
+    {
+      "name": "poor persian",
+      "pattern": "/[الفبپتسجچحخدذرزژسشصضطظعغفقکگلمنوهی]/g"
+    }
+  ],
+  "ignoreRegExpList": ["poor persian"]
+}

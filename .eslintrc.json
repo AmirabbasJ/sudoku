@@ -1,43 +1,60 @@
 {
   "root": true,
-  "extends": ["@fullstacksjs"],
-  "ignorePatterns": ["**/*"],
-  "plugins": ["@nrwl/nx"],
+  "parserOptions": {
+    "project": ["./tsconfig.eslint.json"]
+  },
   "settings": {
     "import/resolver": {
       "typescript": {
-        "project": ["tsconfig.base.json"]
+        "project": ["tsconfig.json"]
       }
     }
   },
-  "overrides": [
-    {
-      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-      "rules": {
-        "@nrwl/nx/enforce-module-boundaries": [
-          "error",
-          {
-            "enforceBuildableLibDependency": true,
-            "allow": [],
-            "depConstraints": [
-              {
-                "sourceTag": "*",
-                "onlyDependOnLibsWithTags": ["*"]
-              }
-            ]
-          }
+  "extends": ["@fullstacksjs", "@fullstacksjs/eslint-config/typecheck"],
+  "rules": {
+    "@typescript-eslint/naming-convention": [
+      "warn",
+      { "selector": "default", "format": ["camelCase"] },
+      {
+        "selector": "variable",
+        "format": ["camelCase", "UPPER_CASE", "PascalCase"]
+      },
+      {
+        "selector": "parameter",
+        "format": ["camelCase", "PascalCase"],
+        "leadingUnderscore": "allow"
+      },
+      {
+        "selector": "memberLike",
+        "modifiers": ["private"],
+        "format": ["camelCase"],
+        "leadingUnderscore": "allow"
+      },
+      {
+        "selector": "memberLike",
+        "format": null
+      },
+      { "selector": "typeLike", "format": ["PascalCase"] },
+      {
+        "selector": "interface",
+        "format": ["PascalCase"],
+        "custom": { "regex": "^I[A-Z]", "match": false }
+      },
+      {
+        "selector": "variable",
+        "types": ["boolean"],
+        "format": ["PascalCase"],
+        "prefix": [
+          "is",
+          "should",
+          "has",
+          "can",
+          "did",
+          "will",
+          "enable",
+          "loading"
         ]
       }
-    },
-    {
-      "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nrwl/nx/typescript"],
-      "rules": {}
-    },
-    {
-      "files": ["*.js", "*.jsx"],
-      "extends": ["plugin:@nrwl/nx/javascript"],
-      "rules": {}
-    }
-  ]
+    ]
+  }
 }

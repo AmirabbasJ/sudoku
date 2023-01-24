@@ -1,13 +1,18 @@
-# Editor configuration, see http://editorconfig.org
 root = true
 
 [*]
 charset = utf-8
-indent_style = space
+end_of_line = lf
 indent_size = 2
+indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.md]
-max_line_length = off
+[*.{js,ts}]
+quote_type = single
+curly_bracket_next_line = false
+spaces_around_brackets = inside
+indent_brace_style = BSD KNF
+
+[*.{md,markdown}]
 trim_trailing_whitespace = false
