@@ -6,9 +6,9 @@ import {
   editSlot,
   getCoveredSlotIds,
   getSlot,
-  isFilled,
   isPrefilled,
   isUnfilled,
+  isValid,
   moveInBoard,
   UnfilledSlot,
 } from '@sudoku/core';
@@ -76,7 +76,7 @@ export const useSudoku = () => {
 
   const checkWin = () => {
     const slots = board.flat(3);
-    const isGameWon = slots.every(slot => isPrefilled(slot) || isFilled(slot));
+    const isGameWon = slots.every(slot => isPrefilled(slot) || isValid(slot));
     if (isGameWon) return setGameState('won');
   };
 
@@ -110,11 +110,11 @@ export const useSudoku = () => {
     const slot = getSlot(board, selectedId);
     const didSlotChange = value !== slot.value;
     if (!didSlotChange) return;
-    if (isPrefilled(slot) || isFilled(slot)) return;
-    const isValid = isValidSlot(selectedId, value);
-    if (!isValid) incMistakesCount();
-    const newSlot: Slot = isValid
-      ? { state: 'filled', value }
+    if (isPrefilled(slot) || isValid(slot)) return;
+    const valid = isValidSlot(selectedId, value);
+    if (!valid) incMistakesCount();
+    const newSlot: Slot = valid
+      ? { state: 'valid', value }
       : { state: 'invalid', value };
     const updatedBoard = editSlot(board, selectedId, newSlot);
     return setBoard(updatedBoard);

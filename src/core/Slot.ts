@@ -10,11 +10,11 @@ export type Numeric = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 export type Empty = '';
 export type SlotValue = Empty | Numeric;
 
-export type SlotState = 'filled' | 'invalid' | 'prefilled' | 'unfilled';
+export type SlotState = 'invalid' | 'prefilled' | 'unfilled' | 'valid';
 
-export interface FilledSlot {
+export interface ValidSlot {
   value: Numeric;
-  state: 'filled';
+  state: 'valid';
 }
 
 export interface InvalidSlot {
@@ -33,14 +33,14 @@ export interface UnfilledSlot {
   notes: Note;
 }
 
-export type Slot = FilledSlot | InvalidSlot | PrefilledSlot | UnfilledSlot;
+export type Slot = InvalidSlot | PrefilledSlot | UnfilledSlot | ValidSlot;
 export const UnfilledSlot: UnfilledSlot = {
   value: '',
   notes: emptyNote,
   state: 'unfilled',
 };
 
-export const isFilled = (s: Slot): s is FilledSlot => s.state === 'filled';
+export const isValid = (s: Slot): s is ValidSlot => s.state === 'valid';
 export const isInvalid = (s: Slot): s is InvalidSlot => s.state === 'invalid';
 export const isPrefilled = (s: Slot): s is PrefilledSlot =>
   s.state === 'prefilled';
