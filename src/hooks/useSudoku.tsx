@@ -67,7 +67,7 @@ export const useSudoku = () => {
     if (selectedId == null) return;
     const slot = getSlot(board, selectedId);
     if (!isUnfilled(slot)) return;
-    editSlot(board, selectedId, UnfilledSlot);
+    setBoard(editSlot(board, selectedId, UnfilledSlot));
   };
 
   const isValidSlot = (id: Id, value: Numeric): boolean => {
@@ -110,7 +110,7 @@ export const useSudoku = () => {
     const slot = getSlot(board, selectedId);
     const didSlotChange = value !== slot.value;
     if (!didSlotChange) return;
-    if (isPrefilled(slot)) return;
+    if (isPrefilled(slot) || isFilled(slot)) return;
     const isValid = isValidSlot(selectedId, value);
     if (!isValid) incMistakesCount();
     const newSlot: Slot = isValid
