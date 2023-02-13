@@ -1,5 +1,4 @@
-import * as R from 'ramda';
-
+/* eslint-disable @typescript-eslint/naming-convention */
 import type { Id } from './Id';
 import { idToBoardIndex, toId } from './Id';
 
@@ -66,13 +65,13 @@ export const moveRight = (id: Id): Id => {
 };
 
 export const keyToDir = (key: string): Direction | null =>
-  key === 'ArrowUp'
+  key === 'ArrowUp' || key.toLowerCase() === 'w'
     ? 'Up'
-    : key === 'ArrowDown'
+    : key === 'ArrowDown' || key.toLowerCase() === 's'
     ? 'Down'
-    : key === 'ArrowLeft'
+    : key === 'ArrowLeft' || key.toLowerCase() === 'a'
     ? 'Left'
-    : key === 'ArrowRight'
+    : key === 'ArrowRight' || key.toLowerCase() === 'd'
     ? 'Right'
     : null;
 
@@ -83,6 +82,4 @@ export const moveInBoard = (id: Id, dir: Direction): Id =>
     ? moveDown(id)
     : dir === 'Right'
     ? moveRight(id)
-    : dir === 'Left'
-    ? moveLeft(id)
-    : id;
+    : moveLeft(id);

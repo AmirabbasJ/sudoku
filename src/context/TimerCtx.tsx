@@ -1,8 +1,6 @@
 import { useLocalStorageState } from 'ahooks';
 import { createContext, useMemo } from 'react';
 
-import type { Setter } from './Setter';
-
 interface TimerCtx {
   timer: number;
   setTimer: Setter<number>;

@@ -9,7 +9,7 @@
       "addWords": true
     }
   ],
-  "ignorePaths": ["node_modules/", "dist/"],
+  "ignorePaths": ["node_modules/", "dist/", ".eslintrc.json"],
   "patterns": [
     {
       "name": "poor persian",

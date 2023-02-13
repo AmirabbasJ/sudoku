@@ -1,7 +1,17 @@
 {
   "root": true,
   "extends": "@fullstacksjs/tsconfig/react",
-  "include": ["src"],
+  "compilerOptions": {
+    "paths": {
+      "@sudoku/core": ["./src/core/index.ts"],
+      "@sudoku/context": ["./src/context/index.ts"],
+      "@sudoku/hooks": ["./src/hooks/index.ts"],
+      "@sudoku/icons": ["./src/icons/index.ts"],
+      "@sudoku/design": ["./src/design/index.ts"],
+      "@sudoku/services": ["./src/services/index.ts"]
+    }
+  },
+  "include": ["src", "@types"],
   "exclude": ["node_modules"],
   "references": [{ "path": "./tsconfig.vite.json" }]
 }

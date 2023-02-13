@@ -1,11 +1,9 @@
-import styled, { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from '@sudoku/design';
+import styled from 'styled-components';
 
 import { Board } from './components/Board';
 import { Controls } from './components/Controls';
 import { ThemeSwitcher } from './components/ThemeSwitcher';
-import { GlobalStyle } from './GlobalStyles';
-import { useTheme } from './hooks/useTheme';
-import { darkTheme, lightTheme } from './theme';
 
 const Container = styled.main`
   background-color: ${({ theme }) => theme.bg};
@@ -23,10 +21,8 @@ const Container = styled.main`
 `;
 
 export const App: React.FC = () => {
-  const { theme } = useTheme();
   return (
-    <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
-      <GlobalStyle />
+    <ThemeProvider>
       <Container>
         <ThemeSwitcher />
         <Board />

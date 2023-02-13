@@ -1,25 +1,22 @@
+import { GameStateCtx } from '@sudoku/context';
 import { useContext } from 'react';
 
-import { GameStateCtx } from '../context/GameStateCtx';
-
 export const useGameState = () => {
-  const { gameState, setGameState, setDifficulty, difficulty } =
-    useContext(GameStateCtx);
+  const { gameState, setGameState } = useContext(GameStateCtx);
 
   const isPaused = gameState === 'paused';
   const isPlaying = gameState === 'playing';
+  const isWon = gameState === 'won';
 
   const togglePause = () => {
-    if (isPaused || isPlaying)
-      setGameState(gameState === 'paused' ? 'playing' : 'paused');
+    if (!isWon) setGameState(gameState === 'paused' ? 'playing' : 'paused');
   };
 
   return {
-    setDifficulty,
-    difficulty,
     gameState,
     isPlaying,
     isPaused,
+    isWon,
     togglePause,
     setGameState,
   };

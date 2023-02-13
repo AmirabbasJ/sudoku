@@ -1,5 +1,5 @@
 import type { Id } from './Id';
-import type { Slot } from './Slot';
+import type { SlotValue, UnfilledSlot } from './Slot';
 
 export type Note = [
   '' | 1,
@@ -19,9 +19,15 @@ export interface Notes {
   [key: Id]: Note;
 }
 
-export const addToNote = (note: Note, slot: Slot): Note =>
-  fullNote.map((v, i) => {
-    const currNum = note[i]!;
-    const shouldToggle = currNum === slot;
-    return shouldToggle ? '' : v === slot ? slot : currNum;
+export const editNote = (
+  value: SlotValue,
+  slot: UnfilledSlot,
+): UnfilledSlot => {
+  const newNotes = fullNote.map((v, i) => {
+    const currNote = slot.notes[i] as SlotValue;
+    const shouldToggle = currNote === value;
+    return shouldToggle ? '' : v === value ? value : currNote;
   }) as Note;
+
+  return { ...slot, notes: newNotes };
+};

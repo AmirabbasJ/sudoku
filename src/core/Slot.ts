@@ -1,20 +1,57 @@
 import * as R from 'ramda';
 
 import type { Board } from './Board';
-import { setBoard } from './Board';
 import type { Id } from './Id';
 import { idToBoardIndex, toId } from './Id';
+import type { Note } from './Note';
+import { emptyNote } from './Note';
 
-export type NumericSlot = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-export type EmptySlot = '';
-export type Slot = EmptySlot | NumericSlot;
-export type SlotState = 'correct' | 'mistake';
+export type Numeric = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+export type Empty = '';
+export type SlotValue = Empty | Numeric;
 
-export const parseSlot = (x: string): Slot | null =>
+export type SlotState = 'filled' | 'invalid' | 'prefilled' | 'unfilled';
+
+export interface FilledSlot {
+  value: Numeric;
+  state: 'filled';
+}
+
+export interface InvalidSlot {
+  value: Numeric;
+  state: 'invalid';
+}
+
+export interface PrefilledSlot {
+  value: Numeric;
+  state: 'prefilled';
+}
+
+export interface UnfilledSlot {
+  value: Empty;
+  state: 'unfilled';
+  notes: Note;
+}
+
+export type Slot = FilledSlot | InvalidSlot | PrefilledSlot | UnfilledSlot;
+export const UnfilledSlot: UnfilledSlot = {
+  value: '',
+  notes: emptyNote,
+  state: 'unfilled',
+};
+
+export const isFilled = (s: Slot): s is FilledSlot => s.state === 'filled';
+export const isInvalid = (s: Slot): s is InvalidSlot => s.state === 'invalid';
+export const isPrefilled = (s: Slot): s is PrefilledSlot =>
+  s.state === 'prefilled';
+export const isUnfilled = (s: Slot): s is UnfilledSlot =>
+  s.state === 'unfilled';
+
+export const keyToSlotValue = (x: string): SlotValue | null =>
   /^(Backspace)|(Delete)$/.test(x)
     ? ''
     : /^([1-9]{1})$/.test(x)
-    ? (Number.parseInt(x, 10) as NumericSlot)
+    ? (Number.parseInt(x, 10) as Numeric)
     : null;
 
 const getAllSlotIds = (board: Board) => {
@@ -30,8 +67,10 @@ const getAllSlotIds = (board: Board) => {
     )
     .flat(3);
 };
+export const getSlot = (board: Board, id: Id): Slot =>
+  R.path(idToBoardIndex(id), board);
 
-const getBlockIds = (board: Board, id: Id) => {
+const getBlockSlotsIds = (board: Board, id: Id): Id[] => {
   const [selectedBlockRow, selectedBlockCol] = idToBoardIndex(id);
 
   return getAllSlotIds(board)
@@ -43,14 +82,7 @@ const getBlockIds = (board: Board, id: Id) => {
     .map(toId);
 };
 
-const isNotInBlock = (board: Board, id: Id, slot: NumericSlot): boolean => {
-  const blockSlots = getBlockIds(board, id)
-    .map(idToBoardIndex)
-    .map(path => R.path(path, board));
-  return !blockSlots.includes(slot);
-};
-
-const getRowIds = (board: Board, id: Id) => {
+const getRowSlotsIds = (board: Board, id: Id): Id[] => {
   const [selectedBlockRow, _, selectedSlotRow] = idToBoardIndex(id);
 
   return getAllSlotIds(board)
@@ -62,14 +94,7 @@ const getRowIds = (board: Board, id: Id) => {
     .map(toId);
 };
 
-const isNotInRow = (board: Board, id: Id, slot: NumericSlot): boolean => {
-  const rowSlots = getRowIds(board, id)
-    .map(idToBoardIndex)
-    .map(path => R.path(path, board));
-  return !rowSlots.includes(slot);
-};
-
-const getColIds = (board: Board, id: Id) => {
+const getColSlotsIds = (board: Board, id: Id): Id[] => {
   const [_, selectedBlockCol, __, selectedSlotCol] = idToBoardIndex(id);
 
   return getAllSlotIds(board)
@@ -81,41 +106,7 @@ const getColIds = (board: Board, id: Id) => {
     .map(toId);
 };
 
-const isNotInCol = (board: Board, id: Id, slot: NumericSlot): boolean => {
-  const colSlots = getColIds(board, id)
-    .map(idToBoardIndex)
-    .map(path => R.path(path, board));
-  return !colSlots.includes(slot);
-};
-
-const isValidNumericSlot = R.allPass([isNotInRow, isNotInBlock, isNotInCol]);
-
-export const isValidSlot = (board: Board, id: Id, slot: Slot) =>
-  slot === '' || isValidNumericSlot(setBoard(board, id, ''), id, slot);
-
 export const getCoveredSlotIds = R.pipe(
-  R.juxt([getBlockIds, getColIds, getRowIds]),
+  R.juxt([getBlockSlotsIds, getRowSlotsIds, getColSlotsIds]),
   R.flatten,
 );
-
-export const getSlot = (board: Board, id: Id): Slot =>
-  R.path(idToBoardIndex(id), board);
-
-export const deleteSlot = (board: Board, id: Id): Board => {
-  const newBoard = setBoard(board, id, '');
-  return newBoard;
-};
-
-export const editSlot = (
-  board: Board,
-  id: Id,
-  slot: NumericSlot,
-): [Board, SlotState] => {
-  const validSlot = isValidSlot(board, id, slot);
-  const newBoard = setBoard(board, id, slot);
-  const state: SlotState = !validSlot ? 'mistake' : 'correct';
-  return [newBoard, state];
-};
-
-export const getMutableSlotIds = (board: Board) =>
-  getAllSlotIds(board).filter(id => getSlot(board, id) === '');

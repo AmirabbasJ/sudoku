@@ -1,6 +1,5 @@
+import { BoardCtx } from '@sudoku/context';
 import { useContext } from 'react';
-
-import { BoardCtx } from '../context/BoardCtx';
 
 export const useMistakeCount = () => {
   const { mistakesCount, setMistakesCount } = useContext(BoardCtx);

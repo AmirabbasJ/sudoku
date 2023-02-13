@@ -1,9 +1,7 @@
+import type { Numeric } from '@sudoku/core';
+import { useDraft, useSudoku } from '@sudoku/hooks';
 import React from 'react';
 import styled from 'styled-components';
-
-import type { NumericSlot } from '../core';
-import { useDraft } from '../hooks/useDraft';
-import { useSudoku } from '../hooks/useSudoku';
 
 const Container = styled.div`
   display: grid;
@@ -36,7 +34,7 @@ export const Keypad: React.FC = () => {
 
   const { isDraftMode } = useDraft();
 
-  const editSlotOnKeypadClick = (v: NumericSlot) => {
+  const editSlotOnKeypadClick = (v: Numeric) => {
     return isDraftMode ? addNote(v) : editSelectedSlot(v);
   };
 

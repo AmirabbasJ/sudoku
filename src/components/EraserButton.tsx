@@ -1,8 +1,8 @@
+import { useSudoku } from '@sudoku/hooks';
+import { EraserIcon } from '@sudoku/icons';
 import styled from 'styled-components';
 
-import { useSudoku } from '../hooks/useSudoku';
 import { Button } from './Button';
-import { EraserIcon } from './Icons/EraserIcon';
 import { Title } from './Title';
 
 const Container = styled.div`

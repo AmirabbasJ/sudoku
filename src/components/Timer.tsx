@@ -1,12 +1,9 @@
+import { formatTime } from '@sudoku/core';
+import { useGameState, useTimer } from '@sudoku/hooks';
+import { PauseIcon, PlayIcon } from '@sudoku/icons';
 import { useLocalStorageState } from 'ahooks';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-
-import { formatTime } from '../core';
-import { useGameState } from '../hooks/useGameState';
-import { useTimer } from '../hooks/useTimer';
-import { PauseIcon } from './Icons/PauseIcon';
-import { PlayIcon } from './Icons/PlayIcon';
 
 const Slider = styled.div`
   width: 10rem;

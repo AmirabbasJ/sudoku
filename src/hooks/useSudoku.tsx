@@ -1,221 +1,155 @@
-/* eslint-disable max-lines-per-function */
-import { useQuery } from '@tanstack/react-query';
-import { useUpdateEffect } from 'ahooks';
-import * as R from 'ramda';
-import { useCallback, useContext, useEffect } from 'react';
-
-import { BoardCtx } from '../context/BoardCtx';
-import type {
-  Board,
-  Difficulty,
-  Direction,
-  Id,
-  NumericSlot,
-  Slot,
-} from '../core';
+import { BoardCtx } from '@sudoku/context';
+import type { Difficulty, Direction, Id, Numeric, Slot } from '@sudoku/core';
 import {
-  addToNote,
   deleteSlot,
+  editNote,
   editSlot,
-  emptyNote,
-  getAsyncSampleBoard,
   getCoveredSlotIds,
-  getMutableSlotIds,
   getSlot,
-  isValidSlot,
+  isFilled,
+  isPrefilled,
+  isUnfilled,
   moveInBoard,
-} from '../core';
-import { emptyBoard } from '../emptyBoard';
-// import { fetchSudoku } from '../helpers/fetchSudoku';
+  UnfilledSlot,
+} from '@sudoku/core';
+import { createSudoku } from '@sudoku/services';
+import { useUpdateEffect } from 'ahooks';
+import { useContext, useEffect } from 'react';
+
 import { useGameState } from './useGameState';
 import { useMistakeCount } from './useMistakeCount';
+import { useTimer } from './useTimer';
+
+// NOTE
+// I have an idea
+// we create a toBoard which also assigns the id in the slot
 
 export const useSudoku = () => {
   const {
     board,
     setBoard,
-    mutableIds,
-    setMutableIds,
     selectedId,
     setSelectedId,
-    mistakeIds,
-    setMistakeIds,
     coveredSlotIds,
     setCoveredSlotIds,
-    notes,
-    setNotes,
-    isUsingPersistent,
-    setIsUsingPersistent,
-    reset,
+
+    setSolved,
+    solved,
+    setMistakesCount,
+    difficulty,
+    setDifficulty,
   } = useContext(BoardCtx);
 
   const { incMistakesCount } = useMistakeCount();
-  const { isPaused, isPlaying, setGameState, difficulty, setDifficulty } =
-    useGameState();
+  const { isPlaying, gameState, setGameState } = useGameState();
 
-  const { data, isLoading, isSuccess, isError, refetch } = useQuery<Board>(
-    ['board', difficulty],
-    () => getAsyncSampleBoard(difficulty),
-    { enabled: !isUsingPersistent },
-  );
+  useEffect(() => {
+    console.log('Game State is: ', gameState);
+  }, [gameState]);
+
+  const { setTimer } = useTimer();
+
+  const reset = () => {
+    localStorage.clear();
+    setMistakesCount(0);
+    setTimer(0);
+  };
 
   const newGame = (d: Difficulty) => {
-    setIsUsingPersistent(false);
     reset();
+    const { board: newBoard, solved: newSolved } = createSudoku(difficulty);
+    setBoard(newBoard);
+    setSolved(newSolved);
     setDifficulty(d);
-    void refetch();
-    setGameState('loading');
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      setIsUsingPersistent(true);
-      setGameState('playing');
-      setBoard(data);
-      setMutableIds(getMutableSlotIds(data));
-      setNotes(
-        getMutableSlotIds(data).reduce(
-          (acc, id) => ({ ...acc, [id]: emptyNote }),
-          {},
-        ),
-      );
-    }
-  }, [
-    isSuccess,
-    data,
-    setBoard,
-    setMutableIds,
-    setNotes,
-    setIsUsingPersistent,
-    setGameState,
-  ]);
-
-  useEffect(() => {
-    setGameState(
-      !isUsingPersistent && isLoading
-        ? 'loading'
-        : isError
-        ? 'error'
-        : isPaused
-        ? 'paused'
-        : 'playing',
-    );
-  }, [isLoading, setGameState, isError, isPaused, isUsingPersistent]);
 
   const emptyNotes = () => {
-    if (selectedId != null) setNotes(R.assoc(selectedId, emptyNote, notes));
+    if (selectedId == null) return;
+    const slot = getSlot(board, selectedId);
+    if (!isUnfilled(slot)) return;
+    editSlot(board, selectedId, UnfilledSlot);
   };
 
-  const checkMistakes = useCallback(() => {
-    const newIds = mistakeIds.filter(
-      id => !isValidSlot(board, id, getSlot(board, id)),
-    );
-    setMistakeIds(newIds);
-  }, [board, mistakeIds, setMistakeIds]);
-
-  const checkWinState = () => {
-    const isGameFinished = board.flat(3).every(x => x !== '');
-    const isNoMistakes = R.isEmpty(mistakeIds);
-    if (isGameFinished && isNoMistakes) return setGameState('won');
+  // FIXME
+  const isValidSlot = (id: Id, value: Numeric): boolean => {
+    // return getSlot(getSolvedSamples('easy'), id).value === value;
+    return true;
   };
 
-  const checkCoveredSlots = useCallback(() => {
+  const checkWin = () => {
+    const slots = board.flat(3);
+    const isGameWon = slots.every(slot => isPrefilled(slot) || isFilled(slot));
+    if (isGameWon) return setGameState('won');
+  };
+
+  const checkCoveredSlots = () => {
     if (selectedId == null) return setCoveredSlotIds([]);
     const ids = getCoveredSlotIds(board, selectedId);
     setCoveredSlotIds(ids);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedId]);
+  };
 
   useUpdateEffect(() => {
-    checkMistakes();
-    checkWinState();
+    checkWin();
   }, [board]);
 
-  useEffect(() => checkCoveredSlots(), [selectedId, checkCoveredSlots]);
+  useEffect(() => {
+    checkCoveredSlots();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedId]);
 
   const deleteSelectedSlot = () => {
     if (!isPlaying) return;
     if (selectedId == null) return;
-    const isMutableSlot = mutableIds.includes(selectedId);
-    if (!isMutableSlot) return;
-    if (getSlot(board, selectedId) === '') return emptyNotes();
+    const slot = getSlot(board, selectedId);
+    if (isPrefilled(slot)) return;
+    if (isUnfilled(slot)) return emptyNotes();
     setBoard(deleteSlot(board, selectedId));
   };
 
-  const editSelectedSlot = useCallback(
-    (slot: NumericSlot) => {
-      if (!isPlaying) return;
-      if (selectedId == null) return;
-      const currSlot = getSlot(board, selectedId);
-      const slotIsTheSameAsBefore = slot === currSlot;
-      const isEmptySlot = currSlot === '';
-      const isMistakeSlot = mistakeIds.includes(selectedId);
-      const isMutableSlot = isEmptySlot || mutableIds.includes(selectedId);
-      if (slotIsTheSameAsBefore) return;
-      if (!isMutableSlot) return;
-      if (isMistakeSlot)
-        setMistakeIds(mistakeIds.filter(id => id !== selectedId));
-      const [newBoard, state] = editSlot(board, selectedId, slot);
-
-      if (state === 'mistake') {
-        setMistakeIds(mistakeIds.concat(selectedId));
-        incMistakesCount();
-      }
-
-      return setBoard(newBoard);
-    },
-    [
-      board,
-      incMistakesCount,
-      isPlaying,
-      mistakeIds,
-      mutableIds,
-      selectedId,
-      setBoard,
-      setMistakeIds,
-    ],
-  );
-
-  const moveSelectedSlot = useCallback(
-    (dir: Direction) => {
-      if (!isPlaying) return;
-      setSelectedId(selectedId === null ? null : moveInBoard(selectedId, dir));
-    },
-    [isPlaying, selectedId, setSelectedId],
-  );
-
-  const selectSlot = useCallback(
-    (id: Id | null) => {
-      if (!isPlaying || id === null) return setSelectedId(null);
-      setSelectedId(id === selectedId ? null : id);
-    },
-    [isPlaying, selectedId, setSelectedId],
-  );
-
-  useEffect(() => {
-    if (!isPlaying) selectSlot(null);
-  }, [isPlaying, selectSlot]);
-
-  const addNote = (slot: Slot) => {
+  const editSelectedSlot = (value: Numeric) => {
     if (!isPlaying) return;
     if (selectedId == null) return;
-    const isCurrentSlotEmpty = getSlot(board, selectedId) === '';
-    if (!isCurrentSlotEmpty) return;
-    const note = notes[selectedId] ?? emptyNote;
-    return setNotes(R.assoc(selectedId, addToNote(note, slot), notes));
+    const slot = getSlot(board, selectedId);
+    const didSlotChange = value !== slot.value;
+    if (!didSlotChange) return;
+    if (isPrefilled(slot)) return;
+    const isValid = isValidSlot(selectedId, value);
+    if (!isValid) incMistakesCount();
+    const newSlot: Slot = isValid
+      ? { state: 'filled', value }
+      : { state: 'invalid', value };
+    const updatedBoard = editSlot(board, selectedId, newSlot);
+    return setBoard(updatedBoard);
+  };
+
+  const moveSelectedSlot = (dir: Direction) => {
+    if (!isPlaying) return;
+    setSelectedId(selectedId === null ? null : moveInBoard(selectedId, dir));
+  };
+
+  const selectSlot = (id: Id | null) => {
+    if (!isPlaying || id === null) return setSelectedId(null);
+    setSelectedId(id === selectedId ? null : id);
+  };
+
+  const addNote = (value: Numeric) => {
+    if (!isPlaying) return;
+    if (selectedId == null) return;
+    const slot = getSlot(board, selectedId);
+    if (!isUnfilled(slot)) return;
+
+    const updatedBoard = editSlot(board, selectedId, editNote(value, slot));
+    return setBoard(updatedBoard);
   };
 
   return {
     board,
-    mutableIds,
     selectedId,
-    mistakeIds,
     editSelectedSlot,
     moveSelectedSlot,
     selectSlot,
     deleteSelectedSlot,
     coveredSlotIds,
-    notes,
     addNote,
     emptyNotes,
     newGame,

@@ -1,8 +1,8 @@
+import { useSudoku } from '@sudoku/hooks';
 import { useClickAway, useToggle } from 'ahooks';
 import React, { useRef } from 'react';
 import styled from 'styled-components';
 
-import { useSudoku } from '../hooks/useSudoku';
 import { Btn } from './Button';
 
 const Container = styled.div`

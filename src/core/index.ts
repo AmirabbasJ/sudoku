@@ -4,7 +4,4 @@ export * from './Direction';
 export * from './formatTime';
 export * from './Id';
 export * from './Note';
-export * from './sample';
 export * from './Slot';
-export * from './SolvedSudokuDto';
-export * from './SolveSudokuDto';

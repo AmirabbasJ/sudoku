@@ -1,15 +1,15 @@
-/* eslint-disable react/no-array-index-key */
-
+import {
+  getSlot,
+  isUnfilled,
+  keyToDir,
+  keyToSlotValue,
+  toId,
+} from '@sudoku/core';
+import { useDraft, useSudoku } from '@sudoku/hooks';
 import { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { getSlot, keyToDir, parseSlot, toId } from '../core';
-import { useDraft } from '../hooks/useDraft';
-import { useGameState } from '../hooks/useGameState';
-import { useSudoku } from '../hooks/useSudoku';
 import { Block } from './Block';
-import { LoadingBoard } from './LoadingBoard';
-import { NoteSlot } from './NoteSlot';
 import { Overlay } from './Overlay';
 import { Slot } from './Slot';
 
@@ -33,37 +33,48 @@ export const Board: React.FC = () => {
     board,
     editSelectedSlot,
     deleteSelectedSlot,
-    mistakeIds,
     moveSelectedSlot,
-    mutableIds,
     selectSlot,
     selectedId,
     coveredSlotIds,
     addNote,
-    notes,
   } = useSudoku();
 
-  const { gameState, isPlaying } = useGameState();
-
-  const { isDraftMode } = useDraft();
+  const { isDraftMode, toggleDraftMode } = useDraft();
   const editSlotOnKeydown = useCallback(
     ({ key }: KeyboardEvent) => {
-      const slot = parseSlot(key);
+      const slot = keyToSlotValue(key);
       if (slot == null) return;
-      if (slot === '') return void deleteSelectedSlot();
-      return isDraftMode ? void addNote(slot) : void editSelectedSlot(slot);
+      if (slot === '') return deleteSelectedSlot();
+      return isDraftMode ? addNote(slot) : editSelectedSlot(slot);
     },
-    [isDraftMode, deleteSelectedSlot, addNote, editSelectedSlot],
+    [addNote, deleteSelectedSlot, editSelectedSlot, isDraftMode],
   );
 
   const moveOnKeydown = useCallback(
     ({ key }: KeyboardEvent) => {
       const dir = keyToDir(key);
       if (dir == null) return;
-      return void moveSelectedSlot(dir);
+      return moveSelectedSlot(dir);
     },
     [moveSelectedSlot],
   );
+
+  const addShortcuts = useCallback(
+    ({ key }: KeyboardEvent) => {
+      if (key.toLowerCase() === 'e') return toggleDraftMode();
+      if (key.toLowerCase() === 'q') return deleteSelectedSlot();
+    },
+    [deleteSelectedSlot, toggleDraftMode],
+  );
+
+  useEffect(() => {
+    document.addEventListener('keydown', addShortcuts);
+
+    return () => {
+      document.removeEventListener('keydown', addShortcuts);
+    };
+  }, [addShortcuts]);
 
   useEffect(() => {
     document.addEventListener('keydown', editSlotOnKeydown);
@@ -82,17 +93,10 @@ export const Board: React.FC = () => {
   }, [moveOnKeydown]);
 
   const selectedSlot = selectedId == null ? null : getSlot(board, selectedId);
-  console.log(isPlaying);
-  if (!isPlaying)
-    return (
-      <Container>
-        <Overlay state={gameState} />
-        <LoadingBoard />
-      </Container>
-    );
 
   return (
     <Container>
+      <Overlay />
       {board.map((blockRow, blockRowIndex) =>
         blockRow.map((blocks, blockColIndex) => (
           <Block key={blockColIndex + blockRowIndex}>
@@ -105,36 +109,19 @@ export const Board: React.FC = () => {
                   slotColIndex,
                 ]);
                 const isSelected = id === selectedId;
-                const isMistake = mistakeIds.includes(id);
-                const isMutable = mutableIds.includes(id);
                 const isCoveredSlot = coveredSlotIds.includes(id);
-                const isNoteSlot =
-                  slot === '' && !notes[id]!.every(x => x === '');
-                const hasSameContent = selectedSlot === slot && slot !== '';
-                return isNoteSlot ? (
-                  <NoteSlot
+                const hasSameContentAsSelected =
+                  selectedSlot?.value === slot.value && !isUnfilled(slot);
+                return (
+                  <Slot
+                    onClick={() => selectSlot(id)}
                     id={id}
                     key={id}
-                    notes={notes[id]!}
-                    isMutable={isMutable}
+                    slot={slot}
                     isSelected={isSelected}
-                    isMistake={isMistake}
                     isCoveredSlot={isCoveredSlot}
-                    hasSameContent={hasSameContent}
-                    onClick={() => selectSlot(id)}
+                    hasSameContent={hasSameContentAsSelected}
                   />
-                ) : (
-                  <Slot
-                    isMutable={isMutable}
-                    isSelected={isSelected}
-                    isMistake={isMistake}
-                    isCoveredSlot={isCoveredSlot}
-                    hasSameContent={hasSameContent}
-                    key={id}
-                    onClick={() => selectSlot(id)}
-                  >
-                    {slot}
-                  </Slot>
                 );
               }),
             )}

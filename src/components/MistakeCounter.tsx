@@ -1,8 +1,6 @@
+import { useMistakeCount, useSudoku } from '@sudoku/hooks';
 import React from 'react';
 import styled from 'styled-components';
-
-import { useMistakeCount } from '../hooks/useMistakeCount';
-import { useSudoku } from '../hooks/useSudoku';
 
 const Container = styled.div`
   color: ${({ theme }) => theme.primary};

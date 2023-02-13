@@ -12,17 +12,46 @@
   },
   "extends": ["@fullstacksjs", "@fullstacksjs/eslint-config/typecheck"],
   "rules": {
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "varsIgnorePattern": "^([iI]gnore(d)?)|(_+)",
+        "argsIgnorePattern": "^_",
+        "args": "after-used",
+        "ignoreRestSiblings": true
+      }
+    ],
+    "@typescript-eslint/non-nullable-type-assertion-style": "off",
+    "react/no-array-index-key": "off",
+    "@typescript-eslint/no-confusing-void-expression": "off",
+    "@typescript-eslint/no-meaningless-void-operator": "off",
+
     "@typescript-eslint/naming-convention": [
       "warn",
-      { "selector": "default", "format": ["camelCase"] },
+      {
+        "selector": "default",
+        "format": ["camelCase"],
+        "filter": {
+          "regex": "^_+$",
+          "match": false
+        }
+      },
       {
         "selector": "variable",
-        "format": ["camelCase", "UPPER_CASE", "PascalCase"]
+        "format": ["camelCase", "UPPER_CASE", "PascalCase"],
+        "filter": {
+          "regex": "^_+$",
+          "match": false
+        }
       },
       {
         "selector": "parameter",
         "format": ["camelCase", "PascalCase"],
-        "leadingUnderscore": "allow"
+        "leadingUnderscore": "allow",
+        "filter": {
+          "regex": "^_+$",
+          "match": false
+        }
       },
       {
         "selector": "memberLike",

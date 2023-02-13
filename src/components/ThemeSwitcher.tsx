@@ -1,9 +1,7 @@
+import { useTheme } from '@sudoku/hooks';
+import { MoonIcon, SunIcon } from '@sudoku/icons';
 import React from 'react';
 import styled from 'styled-components';
-
-import { useTheme } from '../hooks/useTheme';
-import { MoonIcon } from './Icons/MoonIcon';
-import { SunIcon } from './Icons/SunIcon';
 
 const Btn = styled.button`
   position: absolute;

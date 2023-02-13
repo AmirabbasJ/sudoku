@@ -1,7 +1,6 @@
+import type { ThemeType } from '@sudoku/context';
+import { ThemeCtx } from '@sudoku/context';
 import { useContext } from 'react';
-
-import type { ThemeType } from '../context/ThemeCtx';
-import { ThemeCtx } from '../context/ThemeCtx';
 
 const setPersistentTheme = (theme: ThemeType) => {
   localStorage.setItem('theme', theme);

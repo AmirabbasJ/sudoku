@@ -1,8 +1,8 @@
+import { useDraft } from '@sudoku/hooks';
+import { PencilIcon } from '@sudoku/icons';
 import styled from 'styled-components';
 
-import { useDraft } from '../hooks/useDraft';
 import { Button } from './Button';
-import { PencilIcon } from './Icons/PencilIcon';
 import { Title } from './Title';
 
 const State = styled.p<{ isOn: boolean }>`

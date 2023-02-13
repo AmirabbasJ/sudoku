@@ -2,7 +2,7 @@ import { createContext, useMemo, useState } from 'react';
 
 interface DraftCtx {
   isDraftMode: boolean;
-  setIsDraftMode: (b: boolean) => void;
+  setIsDraftMode: Setter<boolean>;
 }
 
 export const DraftCtx = createContext<DraftCtx | null>(
