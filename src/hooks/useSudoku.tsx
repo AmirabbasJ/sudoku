@@ -70,10 +70,8 @@ export const useSudoku = () => {
     editSlot(board, selectedId, UnfilledSlot);
   };
 
-  // FIXME
   const isValidSlot = (id: Id, value: Numeric): boolean => {
-    // return getSlot(getSolvedSamples('easy'), id).value === value;
-    return true;
+    return getSlot(solved, id).value === value;
   };
 
   const checkWin = () => {
