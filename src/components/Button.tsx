@@ -14,7 +14,7 @@ export const Btn = styled.button<{ withBorder?: boolean }>`
     ${({ withBorder, theme }) => (withBorder ? theme.primary : 'transparent')};
   transition: border 100ms ease-in-out;
   :hover {
-    background-color: ${({ theme }) => theme.btnHover};
+    background-color: ${({ theme }) => theme.secondaryHover};
   }
 `;
 

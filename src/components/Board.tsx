@@ -16,13 +16,13 @@ import { Slot } from './Slot';
 const Container = styled.div`
   border-radius: 1rem;
   overflow: hidden;
-  background-color: ${({ theme }) => theme.boardBorder};
+  background-color: ${({ theme }) => theme.border};
   display: grid;
   grid-gap: 0.125rem;
   justify-items: center;
   align-items: center;
   align-self: center;
-  border: 0.125rem solid ${({ theme }) => theme.boardBorder};
+  border: 0.125rem solid ${({ theme }) => theme.border};
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
   position: relative;
@@ -92,7 +92,8 @@ export const Board: React.FC = () => {
     };
   }, [moveOnKeydown]);
 
-  const selectedSlot = selectedId == null ? null : getSlot(board, selectedId);
+  const primaryEmphasized =
+    selectedId == null ? null : getSlot(board, selectedId);
 
   return (
     <Container>
@@ -111,7 +112,7 @@ export const Board: React.FC = () => {
                 const isSelected = id === selectedId;
                 const isCoveredSlot = coveredSlotIds.includes(id);
                 const hasSameContentAsSelected =
-                  selectedSlot?.value === slot.value && !isUnfilled(slot);
+                  primaryEmphasized?.value === slot.value && !isUnfilled(slot);
                 return (
                   <Slot
                     onClick={() => selectSlot(id)}

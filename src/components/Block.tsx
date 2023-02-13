@@ -6,7 +6,7 @@ export const Block = styled.div`
   align-items: center;
   grid-gap: 0.0625rem;
   border-left: none;
-  background-color: ${({ theme }) => theme.slotsGaps};
+  background-color: ${({ theme }) => theme.secondaryActive};
   border-bottom: none;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;

@@ -8,7 +8,7 @@ export const StyledOverlay = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: ${({ theme }) => theme.overlayColor};
+  background-color: ${({ theme }) => theme.secondary};
   display: flex;
   align-items: center;
   justify-content: center;

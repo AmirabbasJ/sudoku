@@ -19,7 +19,7 @@ const Btn = styled.button`
   align-items: center;
   cursor: pointer;
   :hover {
-    background-color: ${({ theme }) => theme.btnHover};
+    background-color: ${({ theme }) => theme.secondaryHover};
   }
 `;
 

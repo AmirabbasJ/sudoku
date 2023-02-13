@@ -8,7 +8,7 @@ import { Title } from './Title';
 const State = styled.p<{ isOn: boolean }>`
   position: absolute;
   width: 3rem;
-  color: ${({ theme }) => theme.draftStateFontColor};
+  color: ${({ theme }) => theme.textSecondary};
   font-size: 0.8em;
   display: flex;
   justify-content: center;
@@ -16,7 +16,7 @@ const State = styled.p<{ isOn: boolean }>`
   height: 2.25rem;
   border-radius: 100rem;
   background-color: ${({ isOn, theme }) =>
-    isOn ? theme.primary : theme.draftThumbnail};
+    isOn ? theme.primary : theme.secondaryMuted};
   right: 0;
   top: 0;
   font-weight: bold;

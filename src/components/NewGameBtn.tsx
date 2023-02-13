@@ -11,10 +11,10 @@ const Container = styled.div`
 
 const NewGameButton = styled(Btn)`
   background-color: ${({ theme }) => theme.primary};
-  color: ${({ theme }) => theme.timeFontColor};
+  color: ${({ theme }) => theme.textSecondary};
   border-radius: 1rem;
   :hover {
-    background-color: ${({ theme }) => theme.selectedSlot};
+    background-color: ${({ theme }) => theme.primaryEmphasized};
   }
 `;
 
@@ -30,13 +30,13 @@ const DropDown = styled.div<{ show: boolean }>`
 
 const GameMode = styled(Btn)`
   background-color: ${({ theme }) => theme.primary};
-  color: ${({ theme }) => theme.timeFontColor};
+  color: ${({ theme }) => theme.textSecondary};
   width: 100%;
   padding: 1rem;
   border-radius: 0;
   cursor: pointer;
   :hover {
-    background-color: ${({ theme }) => theme.selectedSlot};
+    background-color: ${({ theme }) => theme.primaryEmphasized};
   }
 `;
 

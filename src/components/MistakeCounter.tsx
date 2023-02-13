@@ -11,11 +11,7 @@ const Count = styled.span<{ count: number }>`
   font-weight: bold;
   transition: color 300ms ease-in-out;
   color: ${({ count, theme }) =>
-    count < 3
-      ? theme.primary
-      : count < 8
-      ? theme.midMistakeCount
-      : theme.mistake};
+    count < 3 ? theme.primary : count < 8 ? theme.warning : theme.error};
 `;
 const Mistakes = styled.p``;
 

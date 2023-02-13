@@ -20,16 +20,16 @@ export const BaseSlot = styled.div<SlotProps>`
     theme,
   }) =>
     isSelected
-      ? theme.selectedSlot
+      ? theme.primaryEmphasized
       : invalid
-      ? theme.mistakeBg
+      ? theme.bgError
       : hasSameContent
-      ? theme.sameContentSlots
+      ? theme.secondaryActive
       : isCoveredSlot
-      ? theme.coveredSlots
-      : theme.slotBg};
+      ? theme.secondaryHover
+      : theme.bgSubtle};
   color: ${({ invalid = false, prefilled = false, theme }) =>
-    invalid ? theme.mistake : prefilled ? theme.slotFontColor : theme.primary};
+    invalid ? theme.error : prefilled ? theme.textPrimary : theme.primary};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -49,7 +49,7 @@ const Note = styled.p`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: ${({ theme }) => theme.noteColor};
+  color: ${({ theme }) => theme.textMuted};
 `;
 
 interface Props {
